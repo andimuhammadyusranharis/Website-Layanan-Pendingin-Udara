@@ -215,20 +215,15 @@
                     <!-- Breadcrumb & Micro Tracker -->
 
                     <!-- Main Desktop Split Grid -->
-                    <div class="w-full max-w-3xl mx-auto">
+                    <div class="w-full max-w-md mx-auto">
                         <!-- Formulir Pendaftaran Pelanggan -->
                         <div class="lg:col-span-7 bg-surface-container-lowest rounded-3xl p-space-md sm:p-space-lg shadow-[0_15px_35px_-5px_rgba(20,64,127,0.08),0_4px_10px_-2px_rgba(20,64,127,0.03)]">
                             <div>
                                 <!-- Form Header -->
                                 <div class="flex flex-col gap-1 pb-space-md">
-                                    <h2 class="font-headline-md text-headline-md font-bold text-text-primary">
+                                    <h2 class="font-headline-md text-headline-sm font-bold text-text-primary">
                                         Buat Akun
                                     </h2>
-                                    <p class="font-body-md text-body-md text-text-secondary">
-                                        Lengkapi data untuk kemudahan pemesanan
-                                        servis berkala &amp; pembelian komponen
-                                        resmi.
-                                    </p>
                                 </div>
                                 <!-- Interactive Registration Form -->
                                 <form
@@ -239,14 +234,14 @@
                                         handleSubmit();
                                     "
                                 >
-                                    <!-- Field 1 & 2: Nama & WhatsApp Grid -->
+                                    <!-- Field 1 & 2: Nama & Email -->
                                     <div
-                                        class="grid grid-cols-1 sm:grid-cols-2 gap-space-md"
+                                        class="flex flex-col gap-space-md"
                                     >
                                         <!-- Field 1: Nama Lengkap -->
                                         <div class="flex flex-col gap-1.5">
                                             <label
-                                                class="font-label-md text-label-md text-text-primary flex items-center justify-between"
+                                                class="font-label-sm text-label-sm text-text-primary flex items-center justify-between"
                                                 for="reg-name"
                                                 ><span class=""
                                                     >Nama Lengkap
@@ -257,11 +252,11 @@
                                             >
                                             <div class="relative">
                                                 <span
-                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[22px] pointer-events-none"
+                                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px] pointer-events-none"
                                                     >badge</span
                                                 >
                                                 <input
-                                                    class="w-full min-h-[44px] pl-12 pr-4 bg-surface-container-low text-text-primary font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
+                                                    class="w-full min-h-[38px] pl-10 pr-3 bg-surface-container-low text-text-primary font-body-md text-sm rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
                                                     id="reg-name"
                                                     name="fullName"
                                                     autocomplete="name"
@@ -271,143 +266,44 @@
                                                 />
                                             </div>
                                         </div>
-                                        <!-- Field 2: Nomor WhatsApp Aktif -->
+                                        <!-- Field 2: Email -->
                                         <div class="flex flex-col gap-1.5">
                                             <label
-                                                class="font-label-md text-label-md text-text-primary"
-                                                for="reg-whatsapp"
-                                                >Nomor WhatsApp Aktif
-                                                <span class="text-status-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <div class="relative">
-                                                <span
-                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[22px] pointer-events-none"
-                                                    >phone_iphone</span
-                                                ><input
-                                                    class="w-full min-h-[44px] pl-12 pr-4 bg-surface-container-low text-text-primary font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
-                                                    id="reg-whatsapp"
-                                                    name="whatsapp"
-                                                    autocomplete="tel"
-                                                    inputmode="tel"
-                                                    pattern="[0-9]{10,14}"
-                                                    placeholder="0812-xxxx-xxxx"
-                                                    required=""
-                                                    type="tel"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Field 3 & 4: Email & Kecamatan Grid -->
-                                    <div
-                                        class="grid grid-cols-1 sm:grid-cols-2 gap-space-md"
-                                    >
-                                        <!-- Field 3: Email (Opsional) -->
-                                        <div class="flex flex-col gap-1.5">
-                                            <label
-                                                class="font-label-md text-label-md text-text-primary flex items-center justify-between"
+                                                class="font-label-sm text-label-sm text-text-primary flex items-center justify-between"
                                                 for="reg-email"
                                             >
                                                 <span class=""
-                                                    >Alamat Email</span
-                                                >
-                                            </label>
-                                            <div class="relative">
-                                                <span
-                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[22px] pointer-events-none"
-                                                    >mail</span
-                                                >
-                                                <input
-                                                    class="w-full min-h-[44px] pl-12 pr-4 bg-surface-container-low text-text-primary font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
-                                                    id="reg-email"
-                                                    name="email"
-                                                    autocomplete="email"
-                                                    placeholder="nama@email.com"
-                                                    type="email"
-                                                />
-                                            </div>
-                                        </div>
-                                        <!-- Field 4: Kecamatan di Pangkep -->
-                                        <div class="flex flex-col gap-1.5">
-                                            <label
-                                                class="font-label-md text-label-md text-text-primary flex items-center justify-between"
-                                                for="reg-district"
-                                            >
-                                                <span class=""
-                                                    >Kecamatan di Pangkep
+                                                    >Alamat Email
                                                     <span class="text-status-danger"
                                                         >*</span
                                                     ></span
                                                 >
-                                                <span
-                                                    class="font-label-sm text-label-sm text-primary font-semibold"
-                                                    >Area Jangkauan Servis</span
-                                                >
                                             </label>
                                             <div class="relative">
                                                 <span
-                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[22px] pointer-events-none"
-                                                    >location_on</span
+                                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px] pointer-events-none"
+                                                    >mail</span
                                                 >
-                                                <select
-                                                    class="w-full min-h-[44px] pl-12 pr-10 bg-surface-container-low text-text-primary font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none appearance-none cursor-pointer"
-                                                    id="reg-district"
-                                                    name="district"
+                                                <input
+                                                    class="w-full min-h-[38px] pl-10 pr-3 bg-surface-container-low text-text-primary font-body-md text-sm rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
+                                                    id="reg-email"
+                                                    name="email"
+                                                    autocomplete="email"
+                                                    placeholder="nama@email.com"
                                                     required=""
-                                                >
-                                                    <option
-                                                        disabled=""
-                                                        selected=""
-                                                        value=""
-                                                    >
-                                                        Pilih Kecamatan
-                                                    </option>
-                                                    <option value="Pangkajene">
-                                                        Kecamatan Pangkajene (Pusat
-                                                        Kota)
-                                                    </option>
-                                                    <option value="Minasatene">
-                                                        Kecamatan Minasatene
-                                                    </option>
-                                                    <option value="Bungoro">
-                                                        Kecamatan Bungoro (Sekitar
-                                                        Pabrik Semen Tonasa)
-                                                    </option>
-                                                    <option value="Labakkang">
-                                                        Kecamatan Labakkang
-                                                    </option>
-                                                    <option value="Ma'rang">
-                                                        Kecamatan Ma'rang
-                                                    </option>
-                                                    <option value="Segeri">
-                                                        Kecamatan Segeri
-                                                    </option>
-                                                    <option value="Mandalle">
-                                                        Kecamatan Mandalle
-                                                    </option>
-                                                    <option value="Balocci">
-                                                        Kecamatan Balocci
-                                                    </option>
-                                                    <option value="Tondong Tallasa">
-                                                        Kecamatan Tondong Tallasa
-                                                    </option>
-                                                </select>
-                                                <span
-                                                    class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-[24px] pointer-events-none"
-                                                    >expand_more</span
-                                                >
+                                                    type="email"
+                                                />
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Field 5 & 6: Kata Sandi & Konfirmasi Grid -->
+                                    <!-- Field 3 & 4: Kata Sandi & Konfirmasi Grid -->
                                     <div
-                                        class="grid grid-cols-1 sm:grid-cols-2 gap-space-md"
+                                        class="flex flex-col gap-space-md"
                                     >
                                         <!-- Kata Sandi -->
                                         <div class="flex flex-col gap-1.5">
                                             <label
-                                                class="font-label-md text-label-md text-text-primary"
+                                                class="font-label-sm text-label-sm text-text-primary"
                                                 for="reg-password"
                                             >
                                                 Kata Sandi
@@ -417,11 +313,11 @@
                                             </label>
                                             <div class="relative">
                                                 <span
-                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[20px] pointer-events-none"
+                                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px] pointer-events-none"
                                                     >lock</span
                                                 >
                                                 <input
-                                                    class="w-full min-h-[44px] pl-11 pr-12 bg-surface-container-low text-text-primary font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
+                                                    class="w-full min-h-[38px] pl-10 pr-10 bg-surface-container-low text-text-primary font-body-md text-sm rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
                                                     id="reg-password"
                                                     minlength="8"
                                                     name="password"
@@ -437,7 +333,7 @@
                                                 />
                                                 <button
                                                     aria-label="Tampilkan sandi"
-                                                    class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-text-secondary hover:text-text-primary focus:outline-none"
+                                                    class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-text-secondary hover:text-text-primary focus:outline-none"
                                                     onclick="
                                                         togglePasswordVisibility(
                                                             'reg-password',
@@ -447,7 +343,7 @@
                                                     type="button"
                                                 >
                                                     <span
-                                                        class="material-symbols-outlined text-[20px]"
+                                                        class="material-symbols-outlined text-[18px]"
                                                         id="toggle-pass-icon"
                                                         >visibility</span
                                                     >
@@ -484,7 +380,7 @@
                                         <!-- Konfirmasi Kata Sandi -->
                                         <div class="flex flex-col gap-1.5">
                                             <label
-                                                class="font-label-md text-label-md text-text-primary"
+                                                class="font-label-sm text-label-sm text-text-primary"
                                                 for="reg-password-confirm"
                                             >
                                                 Konfirmasi Kata Sandi
@@ -494,11 +390,11 @@
                                             </label>
                                             <div class="relative">
                                                 <span
-                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[20px] pointer-events-none"
+                                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-[18px] pointer-events-none"
                                                     >lock_reset</span
                                                 >
                                                 <input
-                                                    class="w-full min-h-[44px] pl-11 pr-12 bg-surface-container-low text-text-primary font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
+                                                    class="w-full min-h-[38px] pl-10 pr-10 bg-surface-container-low text-text-primary font-body-md text-sm rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
                                                     id="reg-password-confirm"
                                                     minlength="8"
                                                     name="passwordConfirm"
@@ -510,7 +406,7 @@
                                                 />
                                                 <button
                                                     aria-label="Tampilkan sandi"
-                                                    class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-text-secondary hover:text-text-primary focus:outline-none"
+                                                    class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-text-secondary hover:text-text-primary focus:outline-none"
                                                     onclick="
                                                         togglePasswordVisibility(
                                                             'reg-password-confirm',
@@ -520,7 +416,7 @@
                                                     type="button"
                                                 >
                                                     <span
-                                                        class="material-symbols-outlined text-[20px]"
+                                                        class="material-symbols-outlined text-[18px]"
                                                         id="toggle-confirm-icon"
                                                         >visibility</span
                                                     >
@@ -530,8 +426,8 @@
                                                 <span
                                                     class="font-label-sm text-label-sm text-text-secondary"
                                                     id="match-label"
-                                                    >Harus sama dengan sandi di
-                                                    kiri</span
+                                                    >Harus sama dengan kata sandi di
+                                                    atas</span
                                                 >
                                             </div>
                                         </div>
@@ -542,13 +438,13 @@
                                             class="flex items-start gap-space-sm cursor-pointer select-none group"
                                         >
                                             <input
-                                                class="mt-1 w-5 h-5 rounded text-primary focus:ring-primary/20 accent-primary cursor-pointer shrink-0"
+                                                class="mt-0.5 w-4 h-4 rounded text-primary focus:ring-primary/20 accent-primary cursor-pointer shrink-0"
                                                 id="reg-terms"
                                                 required=""
                                                 type="checkbox"
                                             />
                                             <span
-                                                class="font-body-md text-body-md text-text-secondary text-sm leading-relaxed"
+                                                class="font-body-md text-xs text-text-secondary leading-relaxed"
                                             >
                                                 Saya menyetujui
                                                 <a
@@ -571,52 +467,36 @@
                                     </div>
                                     <!-- Submit CTA Button -->
                                     <button
-                                        class="w-full min-h-[48px] h-12 bg-primary-container text-on-primary font-label-lg text-label-lg rounded-full flex items-center justify-center gap-space-xs shadow-md shadow-primary/20 hover:bg-primary transition-all duration-200 mt-space-xs cursor-pointer"
+                                        class="w-full min-h-[40px] h-10 bg-primary-container text-on-primary font-label-md text-label-md rounded-full flex items-center justify-center gap-space-xs shadow-md shadow-primary/20 hover:bg-primary transition-all duration-200 mt-space-xs cursor-pointer"
                                         type="submit"
                                     >
                                         <span
-                                            class="material-symbols-outlined text-[20px]"
+                                            class="material-symbols-outlined text-[18px]"
                                             >check_circle</span
                                         >
                                         <span class=""
-                                            >Daftar Akun Sekarang</span
+                                            >Daftar</span
                                         >
                                     </button>
                                 </form>
                             </div>
                             <!-- Form Footer / Links -->
                             <div
-                                class="mt-space-md pt-space-md border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-space-sm text-center"
+                                class="mt-space-md pt-space-md border-t border-border-subtle flex flex-col items-center gap-space-xs text-center"
                             >
                                 <!-- Sudah Punya Akun Link -->
                                 <p
-                                    class="font-label-md text-label-md font-normal text-text-secondary"
+                                    class="font-label-sm text-label-sm font-normal text-text-secondary"
                                 >
                                     Sudah memiliki akun?
                                     <a
-                                        class="text-primary font-bold hover:underline ml-1"
+                                        class="font-body-semibold text-sm text-primary hover:underline inline-flex items-center gap-0.5"
                                         data-path="masuk"
                                         href="{{ route('login') }}"
                                     >
                                         Masuk di sini
                                     </a>
                                 </p>
-                                <!-- Tautan Pendaftaran Teknisi Mitra -->
-                                <a
-                                    class="font-label-md text-label-md text-secondary hover:text-primary transition-colors flex items-center gap-space-xs"
-                                    data-path="daftar-mitra-teknisi"
-                                    href="#"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-[20px]"
-                                        >engineering</span
-                                    >
-                                    Daftar sebagai Teknisi Mitra
-                                    <span
-                                        class="material-symbols-outlined text-[16px]"
-                                        >arrow_forward</span
-                                    >
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -723,23 +603,12 @@
                         "reg-password-confirm",
                     ).value;
                     const name = document.getElementById("reg-name").value;
-                    const wa = document.getElementById("reg-whatsapp").value;
-                    const district =
-                        document.getElementById("reg-district").value;
 
                     if (pwd !== confirm) {
                         alert(
                             "Mohon pastikan konfirmasi kata sandi telah sesuai.",
                         );
                         document.getElementById("reg-password-confirm").focus();
-                        return;
-                    }
-
-                    if (!district) {
-                        alert(
-                            "Silakan pilih kecamatan domisili Anda di Kabupaten Pangkep.",
-                        );
-                        document.getElementById("reg-district").focus();
                         return;
                     }
 

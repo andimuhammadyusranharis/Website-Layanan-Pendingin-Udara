@@ -211,33 +211,21 @@
         </header>
 
         <main class="w-full bg-background flex-1 flex flex-col">
-            <div class="flex flex-col w-full my-auto">
+            <div class="flex-col w-full my-auto">
                 <section class="w-full py-space-lg lg:py-space-md px-margin-mobile sm:px-margin max-w-[1280px] mx-auto">
-                    <!-- Breadcrumb & Micro Tracker -->
-
-                    <div class="w-full max-w-3xl mx-auto">
+                    <div class="w-full max-w-md mx-auto">
                         <!-- Formulir Masuk Akun -->
                         <div class="bg-surface-container-lowest rounded-3xl p-space-md sm:p-space-lg shadow-[0_15px_35px_-5px_rgba(20,64,127,0.08),0_4px_10px_-2px_rgba(20,64,127,0.03)] flex flex-col">
                             <div class="flex flex-col gap-space-md">
                                 <!-- Header Area -->
                                 <div class="flex flex-col gap-space-xs">
-                                    <h2
-                                        class="font-headline-md text-headline-md font-bold text-text-primary tracking-tight"
-                                    >
+                                    <h2 class="font-headline-md text-headline-sm font-bold text-text-primary tracking-tight">
                                         Masuk ke Akun Anda
                                     </h2>
-                                    <p
-                                        class="font-body-md text-body-md text-text-secondary"
-                                    >
-                                        Silakan pilih peran dan masukkan
-                                        kredensial terdaftar Anda.
-                                    </p>
                                 </div>
                                 <!-- Role Selector Segmented Controls -->
                                 <div class="flex flex-col gap-space-xs">
-                                    <label
-                                        class="font-label-md text-label-md text-text-primary"
-                                        >Pilih Peran Pengguna</label
+                                    <label class="font-label-sm text-label-sm text-text-primary">Pilih Peran Pengguna</label
                                     >
                                     <div
                                         class="grid grid-cols-3 gap-space-xs p-1 rounded-xl bg-surface-container-low"
@@ -245,14 +233,14 @@
                                     >
                                         <!-- Role 1: Pelanggan (Active Default) -->
                                         <button
-                                            class="role-btn flex items-center justify-center gap-space-xs py-space-sm px-space-xs min-h-[44px] rounded-lg transition-all font-label-md text-label-md bg-primary-container text-on-primary shadow-sm"
+                                            class="role-btn flex items-center justify-center gap-space-xs py-1.5 px-space-xs min-h-[38px] rounded-lg transition-all font-label-sm text-label-sm bg-primary-container text-on-primary shadow-sm"
                                             data-role="pelanggan"
                                             onclick="selectRole('pelanggan')"
                                             aria-pressed="true"
                                             type="button"
                                         >
                                             <span
-                                                class="material-symbols-outlined text-[20px]"
+                                                class="material-symbols-outlined text-[18px]"
                                                 >person</span
                                             >
                                             <span class="truncate"
@@ -261,14 +249,14 @@
                                         </button>
                                         <!-- Role 2: Teknisi Lapangan -->
                                         <button
-                                            class="role-btn flex items-center justify-center gap-space-xs py-space-sm px-space-xs min-h-[44px] rounded-lg transition-all font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-container"
+                                            class="role-btn flex items-center justify-center gap-space-xs py-1.5 px-space-xs min-h-[38px] rounded-lg transition-all font-label-sm text-label-sm text-text-secondary hover:text-text-primary hover:bg-surface-container"
                                             data-role="teknisi"
                                             onclick="selectRole('teknisi')"
                                             aria-pressed="false"
                                             type="button"
                                         >
                                             <span
-                                                class="material-symbols-outlined text-[20px]"
+                                                class="material-symbols-outlined text-[18px]"
                                                 >handyman</span
                                             >
                                             <span class="truncate"
@@ -277,14 +265,14 @@
                                         </button>
                                         <!-- Role 3: Admin Bengkel -->
                                         <button
-                                            class="role-btn flex items-center justify-center gap-space-xs py-space-sm px-space-xs min-h-[44px] rounded-lg transition-all font-label-md text-label-md text-text-secondary hover:text-text-primary hover:bg-surface-container"
+                                            class="role-btn flex items-center justify-center gap-space-xs py-1.5 px-space-xs min-h-[38px] rounded-lg transition-all font-label-sm text-label-sm text-text-secondary hover:text-text-primary hover:bg-surface-container"
                                             data-role="admin"
                                             onclick="selectRole('admin')"
                                             aria-pressed="false"
                                             type="button"
                                         >
                                             <span
-                                                class="material-symbols-outlined text-[20px]"
+                                                class="material-symbols-outlined text-[18px]"
                                                 >admin_panel_settings</span
                                             >
                                             <span class="truncate">Admin</span>
@@ -298,14 +286,12 @@
                                     onsubmit="handleLoginSubmit(event)"
                                 >
                                     <input id="role-input" name="role" type="hidden" value="pelanggan" />
-                                    <!-- Input 1 & 2: Identitas & Kata Sandi Grid -->
-                                    <div
-                                        class="grid grid-cols-1 sm:grid-cols-2 gap-space-md"
-                                    >
+                                    <!-- Input 1 & 2: Identitas & Kata Sandi -->
+                                    <div class="flex flex-col gap-space-md">
                                         <!-- Input 1: WhatsApp or Email -->
                                         <div class="flex flex-col gap-space-xs">
                                             <label
-                                                class="font-label-md text-label-md text-text-primary flex items-center justify-between"
+                                                class="font-label-sm text-label-sm text-text-primary flex items-center justify-between"
                                                 for="identifier-input"
                                             >
                                                 <span
@@ -314,11 +300,11 @@
                                             </label>
                                             <div class="relative flex items-center">
                                                 <span
-                                                    class="material-symbols-outlined absolute left-4 text-text-secondary text-[22px] pointer-events-none"
+                                                    class="material-symbols-outlined absolute left-3 text-text-secondary text-[18px] pointer-events-none"
                                                     >contact_phone</span
                                                 >
                                                 <input
-                                                    class="w-full min-h-[44px] pl-12 pr-4 bg-surface-container-low text-text-primary placeholder:text-text-secondary/60 font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
+                                                    class="w-full min-h-[38px] pl-10 pr-3 bg-surface-container-low text-text-primary placeholder:text-text-secondary/60 font-body-md text-sm rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
                                                     id="identifier-input"
                                                     name="identifier"
                                                     autocomplete="username"
@@ -334,7 +320,7 @@
                                                 class="flex items-center justify-between"
                                             >
                                                 <label
-                                                    class="font-label-md text-label-md text-text-primary"
+                                                    class="font-label-sm text-label-sm text-text-primary"
                                                     for="password-input"
                                                     >Kata Sandi</label
                                                 >
@@ -347,11 +333,11 @@
                                             </div>
                                             <div class="relative flex items-center">
                                                 <span
-                                                    class="material-symbols-outlined absolute left-4 text-text-secondary text-[22px] pointer-events-none"
+                                                    class="material-symbols-outlined absolute left-3 text-text-secondary text-[18px] pointer-events-none"
                                                     >lock</span
                                                 >
                                                 <input
-                                                    class="w-full min-h-[44px] pl-12 pr-12 bg-surface-container-low text-text-primary placeholder:text-text-secondary/60 font-body-md text-body-md rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
+                                                    class="w-full min-h-[38px] pl-10 pr-10 bg-surface-container-low text-text-primary placeholder:text-text-secondary/60 font-body-md text-sm rounded-xl transition-all focus:bg-surface-container-lowest focus:shadow-md focus:shadow-primary/10 outline-none"
                                                     id="password-input"
                                                     name="password"
                                                     autocomplete="current-password"
@@ -361,7 +347,7 @@
                                                 />
                                                 <button
                                                     aria-label="Tampilkan atau sembunyikan kata sandi"
-                                                    class="absolute right-3 w-10 h-10 flex items-center justify-center text-text-secondary hover:text-text-primary rounded-lg transition-colors"
+                                                    class="absolute right-1.5 w-8 h-8 flex items-center justify-center text-text-secondary hover:text-text-primary rounded-lg transition-colors"
                                                     id="toggle-password-btn"
                                                     onclick="
                                                         togglePasswordVisibility()
@@ -369,7 +355,7 @@
                                                     type="button"
                                                 >
                                                     <span
-                                                        class="material-symbols-outlined text-[22px]"
+                                                        class="material-symbols-outlined text-[18px]"
                                                         id="eye-icon"
                                                         >visibility</span
                                                     >
@@ -386,44 +372,28 @@
                                         >
                                             <input
                                                 checked=""
-                                                class="w-5 h-5 rounded text-primary focus:ring-0 cursor-pointer accent-primary"
+                                                class="w-4 h-4 rounded text-primary focus:ring-0 cursor-pointer accent-primary"
                                                 name="remember_me"
                                                 type="checkbox"
                                             />
                                             <span
-                                                class="font-body-md text-body-md text-text-secondary"
+                                                class="font-body-md text-sm text-text-secondary"
                                                 >Ingat saya di perangkat
                                                 ini</span
                                             >
                                         </label>
                                     </div>
-                                    <!-- Action Buttons Grid -->
-                                    <div
-                                        class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm"
-                                    >
+                                    <!-- Action Buttons -->
+                                    <div class="flex flex-col gap-space-sm">
                                         <!-- Primary Action Button -->
                                         <button
-                                            class="w-full flex items-center justify-center gap-space-xs min-h-[48px] px-space-lg rounded-full bg-primary-container text-on-primary hover:bg-primary transition-all shadow-md font-label-lg text-label-lg"
+                                            class="w-full flex items-center justify-center gap-space-xs min-h-[40px] px-space-md rounded-full bg-primary-container text-on-primary hover:bg-primary transition-all shadow-md font-label-md text-label-md"
                                             type="submit"
                                         >
-                                            <span>Masuk Sekarang</span>
+                                            <span>Masuk</span>
                                             <span
-                                                class="material-symbols-outlined text-[20px]"
+                                                class="material-symbols-outlined text-[18px]"
                                                 >login</span
-                                            >
-                                        </button>
-                                        <!-- Alternative Action: WhatsApp OTP -->
-                                        <button
-                                            class="w-full flex items-center justify-center gap-space-xs min-h-[48px] px-space-lg rounded-full bg-surface-container-low hover:bg-surface-container text-text-primary transition-all font-label-lg text-label-lg shadow-sm"
-                                            onclick="requestOtpWhatsApp()"
-                                            type="button"
-                                        >
-                                            <span
-                                                class="material-symbols-outlined text-[22px] text-status-success"
-                                                >chat</span
-                                            >
-                                            <span
-                                                >Masuk via OTP WhatsApp</span
                                             >
                                         </button>
                                     </div>
@@ -447,11 +417,11 @@
                                     class="flex flex-col sm:flex-row items-center justify-center gap-1.5 text-center"
                                 >
                                     <span
-                                        class="font-body-md text-body-md text-text-secondary"
+                                        class="font-body-md text-sm text-text-secondary"
                                         >Belum memiliki akun pelanggan?</span
                                     >
                                     <a
-                                        class="font-body-semibold text-body-semibold text-primary hover:underline inline-flex items-center gap-0.5"
+                                        class="font-body-semibold text-sm text-primary hover:underline inline-flex items-center gap-0.5"
                                         data-path="daftar-baru"
                                         href="{{ route('registrasi') }}"
                                     >
@@ -463,20 +433,8 @@
                                     </a>
                                 </div>
                             </div>
-                            <!-- Privacy & Protection Guarantee Tagline -->
-                            <div
-                                class="mt-space-md pt-space-md border-t border-border-subtle flex items-center justify-center gap-space-xs text-text-secondary text-center"
-                            >
-                                <span
-                                    class="material-symbols-outlined text-[18px] text-status-success"
-                                    >shield</span
-                                >
-                                <p class="font-label-sm text-label-sm">
-                                    Keamanan data pelanggan terlindungi sesuai
-                                    standar privasi usaha CV. Tiga Putra Teknik.
-                                </p>
-                            </div>
-                        </div>                    </div>
+                        </div>
+                    </div>
                 </section>
             </div>
             <script>
