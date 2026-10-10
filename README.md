@@ -58,4 +58,4 @@ Folder proyek sebaiknya berada di direktori yang dikelola Herd supaya situs lang
 
 ## Berkontribusi
 
-Baca [CONTRIBUTING.md](CONTRIBUTING.md) sebelum membuat branch, commit, atau Pull Request.
+Baca [CONTRIBUTING.md](docs/Kontribusi.md) sebelum membuat branch, commit, atau Pull Request.
