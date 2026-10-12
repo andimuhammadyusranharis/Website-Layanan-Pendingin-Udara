@@ -10,3 +10,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/toko', [TokoController::class, 'index'])->name('toko.index');
