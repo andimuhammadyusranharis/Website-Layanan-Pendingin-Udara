@@ -1,4 +1,5 @@
-<!-- <x-layouts.pengguna title="Toko"> -->
+<x-layouts.pengguna title="Toko">
+    {{-- Variabel: $kategoriProduk, $merekPopuler, $unitAc, $produk --}}
     
 <div class="min-h-screen bg-[#F5F7FA] text-[#1F2937] pb-16">
     
@@ -360,4 +361,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-<!-- </x-layouts.pengguna> -->
+</x-layouts.pengguna>
