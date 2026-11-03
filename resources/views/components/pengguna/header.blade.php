@@ -18,12 +18,12 @@
 @endphp
 
 <header {{ $attributes->merge(['class' => 'sticky top-0 z-50 bg-white shadow-[0px_10px_30px_-5px_rgba(20,64,127,0.06)]']) }}>
-    <div class="mx-auto flex h-20 w-full max-w-[1280px] items-center justify-between gap-4 px-4 lg:px-8">
-        <a href="{{ route('beranda') }}" class="flex shrink-0 items-center gap-3">
+    <div class="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between gap-4 px-4 lg:px-8">
+        <a href="{{ route('beranda') }}" class="flex min-h-11 shrink-0 items-center gap-3">
             <img src="{{ asset('images/komponen-logo.png') }}" alt="" width="40" height="40" class="size-10" />
             <span class="flex flex-col">
                 <span class="text-[18px] leading-[22.5px] font-bold tracking-[-0.45px] whitespace-nowrap text-primary">{{ config('usaha.nama') }}</span>
-                <span class="text-[11px] leading-[11px] font-semibold whitespace-nowrap text-text-secondary">{{ config('usaha.slogan') }}</span>
+                <span class="hidden text-[11px] leading-[11px] font-semibold whitespace-nowrap text-text-secondary sm:block">{{ config('usaha.slogan') }}</span>
             </span>
         </a>
 
