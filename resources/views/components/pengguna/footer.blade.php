@@ -1,25 +1,25 @@
 @php
-    $layananUtama = [
-        'Cuci AC Higienis',
-        'Perbaikan Bocor & Kerusakan',
-        'Pasang & Bongkar Unit',
-        'Isi & Tambah Freon Murni',
+    $tautanLayanan = [
+        ['label' => 'Layanan dan tarif', 'route' => 'layanan.index'],
+        ['label' => 'Suku cadang dan unit AC', 'route' => 'toko.index'],
+        ['label' => 'Ulasan pelanggan', 'route' => 'ulasan.index'],
+        ['label' => 'Tentang kami dan kontak', 'route' => 'kontak.index'],
     ];
 
-    $bantuan = [
-        ['label' => 'Pesan Jadwal Teknisi', 'route' => 'layanan.index', 'ikon' => 'panah-kanan'],
-        ['label' => 'Cek Status & Antrean Pesanan', 'route' => 'login', 'ikon' => 'panah-kanan'],
-        ['label' => 'Kalkulator Estimasi Biaya', 'route' => 'layanan.index', 'ikon' => 'panah-kanan'],
-        ['label' => 'Kebijakan Garansi 14 Hari', 'route' => 'kontak.index', 'ikon' => 'garansi'],
-    ];
+    $tautanAkun = collect([
+        ['label' => 'Hitung estimasi biaya', 'route' => 'estimasi'],
+        ['label' => 'Cek status pesanan', 'route' => 'akun.pesanan.index'],
+        ['label' => 'Kebijakan privasi', 'route' => 'kebijakan-privasi'],
+        ['label' => 'Syarat dan ketentuan', 'route' => 'syarat'],
+    ])->filter(fn (array $item): bool => Route::has($item['route']));
 @endphp
 
-<footer {{ $attributes->merge(['class' => 'w-full shrink-0 bg-[linear-gradient(145deg,#09142b_0%,#0f1f44_50%,#162a5c_100%)] pt-16 pb-10']) }}>
-    <div class="mx-auto flex w-full max-w-[1280px] flex-col gap-14 px-4 lg:px-8">
-        <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+<footer {{ $attributes->merge(['class' => 'w-full shrink-0 bg-surface-dark pt-12 pb-8']) }}>
+    <div class="mx-auto flex w-full max-w-[1280px] flex-col gap-10 px-4 lg:px-8">
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div class="flex flex-col">
                 <div class="flex items-center gap-2.5 pb-4">
-                    <span class="flex h-8 w-[135.42px] shrink-0 items-center justify-center rounded-[4px] bg-white">
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white">
                         <img src="{{ asset('images/komponen-logo.png') }}" alt="" width="32" height="32" class="size-8" />
                     </span>
                     <span class="text-[20px] leading-7 font-bold text-white">{{ config('usaha.nama') }}</span>
@@ -37,62 +37,53 @@
                 </ul>
             </div>
 
-            <div class="flex flex-col gap-4">
-                <h2 class="text-headline-sm text-white">Layanan Utama</h2>
+            <nav class="flex flex-col gap-4" aria-labelledby="footer-halaman">
+                <h2 id="footer-halaman" class="text-headline-sm text-white">Halaman</h2>
                 <ul class="flex flex-col gap-3">
-                    @foreach ($layananUtama as $label)
+                    @foreach ($tautanLayanan as $item)
                         <li>
-                            <a href="{{ route('layanan.index') }}" class="flex items-center gap-1.5 text-[14px] leading-5 text-surface-variant/90 hover:text-white">
-                                <img src="{{ asset('images/komponen-ikon-panah-kanan.svg') }}" alt="" class="shrink-0" />
-                                {{ $label }}
-                            </a>
+                            <a href="{{ route($item['route']) }}" class="text-[14px] leading-5 text-surface-variant/90 hover:text-white hover:underline">{{ $item['label'] }}</a>
                         </li>
                     @endforeach
                 </ul>
-            </div>
+            </nav>
+
+            @if ($tautanAkun->isNotEmpty())
+                <nav class="flex flex-col gap-4" aria-labelledby="footer-bantuan">
+                    <h2 id="footer-bantuan" class="text-headline-sm text-white">Bantuan</h2>
+                    <ul class="flex flex-col gap-3">
+                        @foreach ($tautanAkun as $item)
+                            <li>
+                                <a href="{{ route($item['route']) }}" class="text-[14px] leading-5 text-surface-variant/90 hover:text-white hover:underline">{{ $item['label'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+            @endif
 
             <div class="flex flex-col gap-4">
-                <h2 class="text-headline-sm text-white">Bantuan &amp; Panduan</h2>
-                <ul class="flex flex-col gap-3">
-                    @foreach ($bantuan as $item)
-                        <li>
-                            <a href="{{ route($item['route']) }}" class="flex items-center gap-1.5 text-[14px] leading-5 text-surface-variant/90 hover:text-white">
-                                @if ($item['ikon'] === 'garansi')
-                                    <img src="{{ asset('images/komponen-ikon-garansi.svg') }}" alt="" class="shrink-0" />
-                                @else
-                                    <img src="{{ asset('images/komponen-ikon-panah-kanan.svg') }}" alt="" class="shrink-0" />
-                                @endif
-                                {{ $item['label'] }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-
-            <div class="flex flex-col gap-4">
-                <h2 class="text-headline-sm text-white">Kontak &amp; Bayar</h2>
+                <h2 class="text-headline-sm text-white">Kontak dan pembayaran</h2>
                 <div class="flex flex-col gap-3.5">
                     <a
                         href="{{ config('usaha.whatsapp.tautan') }}"
                         target="_blank"
                         rel="noopener"
-                        class="flex items-center gap-2 rounded-xl border border-whatsapp/40 bg-whatsapp/20 px-[15px] py-[9px] text-[14px] leading-5 text-white"
+                        class="flex items-center gap-2 self-start rounded-xl border border-whatsapp/40 bg-whatsapp/20 px-[15px] py-[9px] text-[14px] leading-5 text-white"
                     >
                         <img src="{{ asset('images/komponen-ikon-whatsapp.svg') }}" alt="" class="shrink-0" />
-                        WhatsApp: {{ config('usaha.whatsapp.nomor') }}
+                        WhatsApp {{ config('usaha.whatsapp.nomor') }}
                     </a>
                     <div class="flex flex-col gap-1.5 text-[14px] leading-5">
                         <p class="font-semibold text-white">Metode Pembayaran:</p>
-                        <p class="text-surface-variant/90">• Bayar di Tempat (COD Teknisi)</p>
-                        <p class="text-surface-variant/90">• QRIS &amp; Transfer Bank Resmi</p>
+                        <ul class="list-disc pl-5 text-surface-variant/90">
+                            <li>Tunai, dibayar setelah pekerjaan selesai</li>
+                            <li>Transfer bank, bukti diunggah di halaman pesanan</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="flex flex-col gap-2 border-t border-surface-variant/15 pt-[25px] text-[12px] leading-4 text-surface-variant/70 lg:flex-row lg:items-center lg:justify-between">
-            <p>© {{ date('Y') }} {{ config('usaha.nama') }} Pangkep. Hak Cipta Dilindungi Undang-Undang.</p>
-            <p>Layanan Servis Pendingin Terpercaya di Kabupaten Pangkajene.</p>
-        </div>
+        <p class="border-t border-surface-variant/15 pt-6 text-[13px] leading-5 text-surface-variant/80">© {{ date('Y') }} {{ config('usaha.nama') }}, Kabupaten Pangkajene dan Kepulauan.</p>
     </div>
 </footer>

@@ -12,17 +12,7 @@ class UlasanController extends Controller
     public function index(): View
     {
         return view('pengguna.ulasan', [
-            'ringkasan' => [
-                'rata_rata' => 4.9,
-                'jumlah' => 128,
-                'persen_puas' => 98,
-                'sebaran' => [5 => 114, 4 => 11, 3 => 3, 2 => 0, 1 => 0],
-                'aspek' => [
-                    ['nama' => 'Ketepatan Waktu', 'nilai' => 4.9],
-                    ['nama' => 'Kebersihan Ruang', 'nilai' => 5.0],
-                    ['nama' => 'Transparansi Biaya', 'nilai' => 4.9],
-                ],
-            ],
+            'ringkasan' => self::ringkasanDummy(),
             'kategoriUlasan' => [
                 ['slug' => 'cuci-ac-split', 'nama' => 'Cuci AC Split', 'jumlah' => 74],
                 ['slug' => 'isi-freon', 'nama' => 'Isi Freon', 'jumlah' => 26],
@@ -30,14 +20,39 @@ class UlasanController extends Controller
                 ['slug' => 'bongkar-pasang', 'nama' => 'Bongkar Pasang', 'jumlah' => 9],
                 ['slug' => 'pembelian-komponen', 'nama' => 'Pembelian Komponen', 'jumlah' => 4],
             ],
-            'ulasan' => [
-                ['nama' => 'Hj. Nurhaedah', 'lokasi' => 'Kel. Pangkajene', 'kategori' => 'cuci-ac-split', 'layanan' => 'Cuci AC Split Dinding (2 Unit)', 'rating' => 5, 'komentar' => 'Pengerjaan Pak Haris sangat rapi. Dinding dan lantai dipasangi plastik pelindung sehingga tidak ada cipratan air kotor sama sekali. AC langsung dingin normal.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-18'],
-                ['nama' => 'Ahmad Syarif', 'lokasi' => 'Kec. Minasatene', 'kategori' => 'perbaikan-kelistrikan', 'layanan' => 'Perbaikan Kelistrikan & Ganti Kapasitor', 'rating' => 5, 'komentar' => 'Respon cepat dan teknisi datang tepat waktu. Tarif transparan sesuai estimasi di awal tanpa biaya tambahan. Sangat direkomendasikan.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-14'],
-                ['nama' => 'Drs. Ridwan M.', 'lokasi' => 'Kec. Bungoro (Ruko Kantor)', 'kategori' => 'cuci-ac-split', 'layanan' => 'Cuci AC Cassette 3 PK', 'rating' => 5, 'komentar' => 'Pembersihan unit kantor bersih tuntas sampai talang drainase. Suara hembusan kembali tenang dan bau apek hilang total.', 'teknisi' => 'Pak Abdul Haris & Tim', 'tanggal' => '2026-05-09'],
-                ['nama' => 'Wahyu Pratama', 'lokasi' => 'Kel. Samalewa, Bungoro', 'kategori' => 'isi-freon', 'layanan' => 'Isi Freon R32 & Tambah Pipa', 'rating' => 5, 'komentar' => 'Pengecekan tekanan manifold diperlihatkan langsung ke saya sebelum dan sesudah diisi freon. Nota garansi 30 hari diberikan secara fisik dan digital.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-02'],
-                ['nama' => 'Ibu Sitti Aminah', 'lokasi' => 'Kec. Segeri', 'kategori' => 'bongkar-pasang', 'layanan' => 'Bongkar Pasang AC 1 PK', 'rating' => 4, 'komentar' => 'Pemasangan rapi dan pipa terbungkus rapi dengan duct tape tebal. Hanya sedikit terlambat 15 menit karena hujan di jalan poros, tapi diinfokan via WA lebih dulu.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-04-27'],
-                ['nama' => 'Muhammad Arifin', 'lokasi' => 'Kec. Pangkajene', 'kategori' => 'pembelian-komponen', 'layanan' => 'Beli Remote Universal AC', 'rating' => 5, 'komentar' => 'Komponen remote langsung diprogram dan diajari cara settingnya. Harganya sama persis dengan yang ada di katalog toko online.', 'teknisi' => null, 'tanggal' => '2026-04-21'],
-            ],
+            'ulasan' => self::ulasanDummy(),
         ]);
+    }
+
+    /**
+     * Ringkasan rating dummy. Dipakai juga oleh beranda agar angkanya sama di kedua halaman.
+     *
+     * @return array{rata_rata: float, jumlah: int, persen_puas: int, sebaran: array<int, int>}
+     */
+    public static function ringkasanDummy(): array
+    {
+        return [
+            'rata_rata' => 4.9,
+            'jumlah' => 128,
+            'persen_puas' => 98,
+            'sebaran' => [5 => 114, 4 => 11, 3 => 3, 2 => 0, 1 => 0],
+        ];
+    }
+
+    /**
+     * Ulasan dummy, terbaru lebih dulu. Dipakai juga oleh beranda.
+     *
+     * @return list<array{nama: string, lokasi: string, kategori: string, layanan: string, rating: int, komentar: string, teknisi: ?string, tanggal: string}>
+     */
+    public static function ulasanDummy(): array
+    {
+        return [
+            ['nama' => 'Hj. Nurhaedah', 'lokasi' => 'Kel. Pangkajene', 'kategori' => 'cuci-ac-split', 'layanan' => 'Cuci AC split dinding (2 unit)', 'rating' => 5, 'komentar' => 'Lantai dan dinding dilapisi plastik dulu sebelum dicuci, jadi tidak ada cipratan air kotor. AC langsung dingin lagi.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-18'],
+            ['nama' => 'Ahmad Syarif', 'lokasi' => 'Kec. Minasatene', 'kategori' => 'perbaikan-kelistrikan', 'layanan' => 'Perbaikan kelistrikan dan ganti kapasitor', 'rating' => 5, 'komentar' => 'Datang sesuai jam yang dijanjikan. Biayanya sama dengan estimasi di awal.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-14'],
+            ['nama' => 'Drs. Ridwan M.', 'lokasi' => 'Kec. Bungoro', 'kategori' => 'cuci-ac-split', 'layanan' => 'Cuci AC cassette 3 PK', 'rating' => 5, 'komentar' => 'AC kantor dibersihkan sampai saluran pembuangannya. Bunyinya tidak berisik lagi dan bau apeknya hilang.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-09'],
+            ['nama' => 'Wahyu Pratama', 'lokasi' => 'Kel. Samalewa, Bungoro', 'kategori' => 'isi-freon', 'layanan' => 'Isi freon R32 dan tambah pipa', 'rating' => 5, 'komentar' => 'Tekanan freon ditunjukkan ke saya sebelum dan sesudah diisi, jadi saya tahu memang kurang.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-05-02'],
+            ['nama' => 'Ibu Sitti Aminah', 'lokasi' => 'Kec. Segeri', 'kategori' => 'bongkar-pasang', 'layanan' => 'Bongkar pasang AC 1 PK', 'rating' => 4, 'komentar' => 'Pemasangannya rapi. Terlambat sekitar 15 menit karena hujan, tapi dikabari lewat WhatsApp sebelumnya.', 'teknisi' => 'Pak Abdul Haris', 'tanggal' => '2026-04-27'],
+            ['nama' => 'Muhammad Arifin', 'lokasi' => 'Kec. Pangkajene', 'kategori' => 'pembelian-komponen', 'layanan' => 'Beli remote AC universal', 'rating' => 5, 'komentar' => 'Remotenya langsung disetel di toko dan saya diajari cara pakainya. Harganya sama dengan di katalog.', 'teknisi' => null, 'tanggal' => '2026-04-21'],
+        ];
     }
 }
