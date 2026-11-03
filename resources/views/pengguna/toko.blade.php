@@ -1,65 +1,56 @@
 <x-layouts.pengguna title="Toko">
     {{-- Variabel: $kategoriProduk, $merekPopuler, $unitAc, $produk --}}
+    @php
+    $caraTerima = [
+    ['ikon' => 'storefront', 'judul' => 'Ambil di toko', 'biaya' => 'Tanpa ongkir', 'deskripsi' => 'Datang ke '.config('usaha.alamat').' dan cek barangnya langsung sebelum dibawa pulang.', 'catatan' => config('usaha.jam_buka')],
+    ['ikon' => 'two_wheeler', 'judul' => 'Diantar driver', 'biaya' => 'Ongkir dari Rp10.000', 'deskripsi' => 'Ongkir dihitung dari jarak toko ke alamat Anda: Rp10.000 untuk 3 km pertama, lalu Rp2.500 per km. Barang dikirim setelah pembayaran lunas.', 'catatan' => 'Hanya untuk wilayah Pangkep'],
+    ['ikon' => 'engineering', 'judul' => 'Dibawa teknisi', 'biaya' => 'Tanpa ongkir', 'deskripsi' => 'Bila Anda juga memesan jasa servis atau pasang, barangnya dibawa teknisi saat datang ke rumah.', 'catatan' => 'Dipesan bersama layanan'],
+    ];
 
-    <div class="min-h-screen bg-[#F5F7FA] text-[#1F2937] pb-16">
+    $rupiah = fn (int $nilai): string => 'Rp'.number_format($nilai, 0, ',', '.');
 
-        {{-- HERO BANNER / HEADER TOKO --}}
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-            <div class="bg-gradient-to-r from-[#E8F1FD] to-[#f7f9fc] rounded-3xl p-6 sm:p-10 border border-[#E3E8EF] shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="max-w-2xl">
-                    <h1 class="text-3xl sm:text-4xl font-extrabold text-[#14407F] tracking-tight mb-3">
-                        Suku Cadang dan Unit AC
-                    </h1>
-                    <p class="text-base sm:text-lg text-[#5B6675] leading-relaxed mb-6">
-                        Menyediakan spare part original bergaransi dan unit AC baru siap pasang langsung oleh teknisi berpengalaman Pak Abdul Haris di seluruh wilayah Kabupaten Pangkajene & Kepulauan.
-                    </p>
-                    <div class="flex flex-wrap gap-3">
-                        <span class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-sm font-semibold text-[#1F2937] border border-[#E3E8EF] shadow-xs">
-                            <svg class="w-5 h-5 text-[#1E9E6A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            100% Produk Original Bersegel
-                        </span>
-                        <span class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-sm font-semibold text-[#1F2937] border border-[#E3E8EF] shadow-xs">
-                            <svg class="w-5 h-5 text-[#1E63D6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            Garansi Tukar Baru 7 Hari
-                        </span>
-                        <span class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-sm font-semibold text-[#1F2937] border border-[#E3E8EF] shadow-xs">
-                            <svg class="w-5 h-5 text-[#20B7C9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            Bisa Sekaligus Jasa Pasang
-                        </span>
-                    </div>
-                </div>
+    $merekDisebut = fn (string $teks): string => collect($merekPopuler)
+    ->filter(fn (string $merek): bool => Str::contains($teks, $merek, ignoreCase: true))
+    ->map(fn (string $merek): string => Str::slug($merek))
+    ->implode(' ');
+
+    $kelasPilihan = 'flex min-h-11 items-center rounded-full border border-border-subtle bg-white px-4 text-label-md lg:min-h-10 lg:px-3.5 text-on-surface-variant transition-colors duration-200 hover:border-primary-container hover:text-primary aria-pressed:border-primary-container aria-pressed:bg-primary-container aria-pressed:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-container';
+    @endphp
+
+    <div data-saring>
+        {{-- Judul dan pencarian --}}
+        <section class="mx-auto w-full max-w-[1280px] px-4 pt-8 pb-8 lg:px-8">
+            <div class="flex max-w-[720px] flex-col gap-3">
+                <h1 class="text-headline-lg-mobile text-on-surface lg:text-headline-lg">Suku cadang dan unit AC</h1>
+                <p class="text-body-md text-text-secondary lg:text-body-lg">Komponen dan unit baru yang tersedia di toko kami. Stok yang tampil adalah stok saat ini.</p>
             </div>
-        </section>
 
-        {{-- SEARCH & FILTER BAR --}}
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-            <div class="bg-white rounded-2xl p-4 sm:p-6 border border-[#E3E8EF] shadow-sm flex flex-col gap-4">
-
-                {{-- Search & Sort Row --}}
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div class="relative w-full md:w-2/3">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-[#737785]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </span>
-                        <input type="text" id="input-pencarian" placeholder="Cari suku cadang, tipe freon, kapasitas PK, atau merek unit AC..."
-                            class="w-full pl-12 pr-4 h-[50px] bg-[#F5F7FA] border border-[#E3E8EF] rounded-xl text-base text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#1E63D6] focus:bg-white transition">
-                    </div>
-                    <div class="flex items-center justify-between w-full md:w-auto gap-3">
-                        <span class="text-sm font-semibold text-[#5B6675] whitespace-nowrap">Urutkan:</span>
-                        <select id="select-urutkan" class="h-[50px] px-4 bg-[#F5F7FA] border border-[#E3E8EF] rounded-xl text-base font-medium text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#1E63D6]">
-                            <option value="rekomendasi">Terpopuler & Rekomendasi</option>
-                            <option value="termurah">Harga Termurah</option>
-                            <option value="termahal">Harga Tertinggi</option>
+            <div class="mt-6 flex flex-col gap-3 rounded-2xl border border-border-subtle bg-white p-4 shadow-[0px_10px_30px_-5px_rgba(20,64,127,0.06)] sm:p-5">
+                <div class="flex flex-col gap-3 md:flex-row md:items-center">
+                    <label class="relative flex flex-1 items-center">
+                        <span class="sr-only">Cari barang</span>
+                        <span class="material-symbols-outlined pointer-events-none absolute left-4 text-text-secondary" aria-hidden="true">search</span>
+                        <input
+                            type="search"
+                            data-saring-cari
+                            placeholder="Contoh: kapasitor, R32, 1 PK, Daikin"
+                            class="h-12 w-full rounded-xl border border-border-subtle bg-surface-container-low pr-4 pl-12 text-body-md text-text-primary placeholder:text-text-secondary focus:border-primary-container focus:bg-white focus:ring-4 focus:ring-primary-container/15 focus:outline-none" />
+                    </label>
+                    <label class="flex items-center gap-3">
+                        <span class="shrink-0 text-body-md text-text-secondary">Urutkan</span>
+                        <select data-saring-urut class="h-12 w-full rounded-xl border border-border-subtle bg-surface-container-low px-3 text-body-md text-text-primary focus:border-primary-container focus:ring-4 focus:ring-primary-container/15 focus:outline-none md:w-auto">
+                            <option value="">Rekomendasi</option>
+                            <option value="harga:asc">Harga termurah</option>
+                            <option value="harga:desc">Harga termahal</option>
                         </select>
-                    </div>
+                    </label>
+                </div>
+
+                <div class="flex flex-wrap gap-2" role="group" aria-label="Saring menurut kategori">
+                    <button type="button" data-saring-pilihan="kategori" data-nilai="" aria-pressed="true" class="{{ $kelasPilihan }}">Semua ({{ count($unitAc) + count($produk) }})</button>
+                    @foreach ($kategoriProduk as $kategori)
+                    <button type="button" data-saring-pilihan="kategori" data-nilai="{{ $kategori['slug'] }}" aria-pressed="false" class="{{ $kelasPilihan }}">{{ $kategori['nama'] }}</button>
+                    @endforeach
                 </div>
 
                 {{-- Category Filter Pills (Dinamis dari $kategoriProduk) --}}
