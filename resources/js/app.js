@@ -105,3 +105,17 @@ document.querySelectorAll('[data-saring]').forEach((akar) => {
         cari?.focus();
     });
 });
+
+// Dropdown penyaring di halaman admin langsung mengirim form-nya saat pilihan diubah.
+document.querySelectorAll('select[data-kirim-otomatis]').forEach((pilihan) => {
+    pilihan.addEventListener('change', () => pilihan.form?.requestSubmit());
+});
+
+// Form dengan data-konfirmasi meminta persetujuan dulu sebelum dikirim, untuk aksi yang tidak bisa dibatalkan.
+document.querySelectorAll('form[data-konfirmasi]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+        if (!window.confirm(form.dataset.konfirmasi)) {
+            event.preventDefault();
+        }
+    });
+});
