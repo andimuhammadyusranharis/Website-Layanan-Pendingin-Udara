@@ -1,4 +1,5 @@
-<x-layouts.pengguna title="Layanan">
+cd C:\Users\ACER\Herd\cv_tigaputrateknik
+git status<x-layouts.pengguna title="Layanan">
     {{-- Variabel: $kategoriLayanan, $layanan, $simulasiEstimasi --}}
     <section class="mx-auto w-full max-w-[1280px] px-4 py-space-xl lg:px-8">
         <h1 class="text-headline-lg-mobile text-on-surface lg:text-headline-lg">Layanan</h1>
