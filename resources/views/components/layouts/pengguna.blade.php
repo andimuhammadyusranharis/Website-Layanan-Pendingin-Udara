@@ -16,6 +16,15 @@
     <body class="flex min-h-screen flex-col bg-background font-sans text-on-surface antialiased">
         <x-pengguna.header />
 
+        @if (session('status'))
+            <div class="border-b border-lencana-hijau/20 bg-lencana-hijau-latar" role="status">
+                <p class="mx-auto flex w-full max-w-[1280px] items-start gap-2 px-4 py-3 text-[15px] leading-6 text-lencana-hijau lg:px-8">
+                    <span class="material-symbols-outlined text-[20px]" aria-hidden="true">check_circle</span>
+                    {{ session('status') }}
+                </p>
+            </div>
+        @endif
+
         <main {{ $attributes->merge(['class' => 'w-full flex-1']) }}>
             {{ $slot }}
         </main>

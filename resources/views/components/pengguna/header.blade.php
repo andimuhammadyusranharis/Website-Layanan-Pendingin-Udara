@@ -10,6 +10,7 @@
     ];
 
     $menuAkun = collect([
+        ...(auth()->user()?->punyaPeran(App\Models\User::PERAN_ADMIN) ? [['label' => 'Panel admin', 'route' => 'admin.dashboard']] : []),
         ['label' => 'Pesanan saya', 'route' => 'akun.pesanan.index'],
         ['label' => 'Profil', 'route' => 'akun.profil'],
     ])->filter(fn (array $item): bool => Route::has($item['route']));
@@ -42,17 +43,6 @@
         </nav>
 
         <div class="flex shrink-0 items-center gap-3">
-            <a
-                href="{{ config('usaha.whatsapp.tautan') }}"
-                target="_blank"
-                rel="noopener"
-                aria-label="WhatsApp resmi {{ config('usaha.nama') }}"
-                class="hidden items-center gap-1.5 rounded-full border border-whatsapp/40 bg-whatsapp/20 px-[13px] py-[9px] text-[12px] leading-4 font-semibold text-text-primary lg:flex"
-            >
-                <img src="{{ asset('images/komponen-ikon-whatsapp.svg') }}" alt="" />
-                {{ config('usaha.whatsapp.nomor') }}
-            </a>
-
             <a
                 href="{{ $tautanKeranjang }}"
                 aria-label="Keranjang belanja ({{ $jumlahKeranjang }} barang)"
@@ -129,16 +119,6 @@
         </nav>
 
         <div class="mt-4 flex flex-col gap-2 border-t border-border-subtle pt-4">
-            <a
-                href="{{ config('usaha.whatsapp.tautan') }}"
-                target="_blank"
-                rel="noopener"
-                class="flex min-h-11 items-center justify-center gap-2 rounded-full border border-whatsapp/40 bg-whatsapp/20 px-4 text-label-lg text-text-primary"
-            >
-                <img src="{{ asset('images/komponen-ikon-whatsapp.svg') }}" alt="" />
-                WhatsApp {{ config('usaha.whatsapp.nomor') }}
-            </a>
-
             @auth
                 <p class="px-4 pt-2 text-body-md text-text-secondary">Masuk sebagai <span class="font-bold text-on-surface">{{ auth()->user()->name }}</span></p>
                 @foreach ($menuAkun as $item)
