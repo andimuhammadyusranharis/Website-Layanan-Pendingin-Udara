@@ -15,13 +15,14 @@ return [
 
     'nama' => 'CV. Tiga Putra Teknik',
 
-    'slogan' => 'Layanan AC Terpercaya Pangkep',
+    'slogan' => 'Servis dan suku cadang AC, Pangkep',
 
-    'deskripsi' => 'Spesialis servis, cuci higienis, dan instalasi AC terpercaya untuk rumah dan kantor di Pangkep.',
+    'deskripsi' => 'Cuci, perbaikan, dan pemasangan AC untuk rumah dan kantor di Kabupaten Pangkajene dan Kepulauan.',
 
+    // Alamat dan jam buka belum dikonfirmasi pemilik. Satu sumber ini dipakai header, footer, toko, dan kontak.
     'alamat' => 'Jl. Poros Makassar - Pangkep, Kec. Pangkajene',
 
-    'jam_buka' => 'Setiap Hari: 08.00 - 17.00 WITA',
+    'jam_buka' => 'Setiap hari, 08.00 - 17.00 WITA',
 
     'whatsapp' => [
         'nomor' => '0812-3456-7890',

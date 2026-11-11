@@ -5,7 +5,8 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-/* Token desain dari docs/DESIGN.md. Nama kelasnya sama dengan yang dipakai halaman login dan registrasi. */
+/* Token desain dari docs/DESIGN.md. Nama kelasnya sama dengan yang dipakai halaman login dan registrasi.
+   Skala judul dan tinggi baris dirapatkan dari nilai DESIGN.md agar proporsi desktop tidak terlalu besar. Teks isi tetap 16px. */
 @theme {
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
@@ -66,32 +67,46 @@
     --color-status-danger: #d64545;
     --color-whatsapp: #25d366;
 
-    --text-display-hero: 48px;
-    --text-display-hero--line-height: 56px;
+    /* Pasangan teks dan latar untuk lencana status (stok, status pesanan). Kontrasnya lolos WCAG AA. */
+    --color-lencana-netral: #5b6675;
+    --color-lencana-netral-latar: #e3e8ef;
+    --color-lencana-biru: #1e63d6;
+    --color-lencana-biru-latar: #e8f1fd;
+    --color-lencana-kuning: #b45309;
+    --color-lencana-kuning-latar: #fef3c7;
+    --color-lencana-sian: #0e7490;
+    --color-lencana-sian-latar: #e0f2fe;
+    --color-lencana-hijau: #15803d;
+    --color-lencana-hijau-latar: #dcfce7;
+    --color-lencana-merah: #b91c1c;
+    --color-lencana-merah-latar: #fee2e2;
+
+    --text-display-hero: 42px;
+    --text-display-hero--line-height: 50px;
     --text-display-hero--font-weight: 800;
     --text-display-hero-mobile: 32px;
     --text-display-hero-mobile--line-height: 40px;
     --text-display-hero-mobile--font-weight: 800;
-    --text-headline-lg: 36px;
-    --text-headline-lg--line-height: 44px;
+    --text-headline-lg: 30px;
+    --text-headline-lg--line-height: 38px;
     --text-headline-lg--font-weight: 700;
-    --text-headline-lg-mobile: 26px;
-    --text-headline-lg-mobile--line-height: 34px;
+    --text-headline-lg-mobile: 24px;
+    --text-headline-lg-mobile--line-height: 32px;
     --text-headline-lg-mobile--font-weight: 700;
-    --text-headline-md: 24px;
-    --text-headline-md--line-height: 32px;
+    --text-headline-md: 21px;
+    --text-headline-md--line-height: 28px;
     --text-headline-md--font-weight: 700;
-    --text-headline-sm: 20px;
-    --text-headline-sm--line-height: 28px;
+    --text-headline-sm: 18px;
+    --text-headline-sm--line-height: 25px;
     --text-headline-sm--font-weight: 600;
-    --text-body-lg: 18px;
-    --text-body-lg--line-height: 28px;
+    --text-body-lg: 17px;
+    --text-body-lg--line-height: 27px;
     --text-body-lg--font-weight: 400;
     --text-body-md: 16px;
-    --text-body-md--line-height: 26px;
+    --text-body-md--line-height: 24px;
     --text-body-md--font-weight: 400;
     --text-body-semibold: 16px;
-    --text-body-semibold--line-height: 26px;
+    --text-body-semibold--line-height: 24px;
     --text-body-semibold--font-weight: 600;
     --text-label-lg: 16px;
     --text-label-lg--line-height: 24px;
