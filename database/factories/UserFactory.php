@@ -27,8 +27,10 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'no_telepon' => null,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => User::PERAN_PELANGGAN,
             'remember_token' => Str::random(10),
         ];
     }
@@ -40,6 +42,23 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => User::PERAN_ADMIN]);
+    }
+
+    public function teknisi(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => User::PERAN_TEKNISI]);
+    }
+
+    public function denganTelepon(?string $nomor = null): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'no_telepon' => $nomor ?? '08'.fake()->unique()->numerify('##########'),
         ]);
     }
 }

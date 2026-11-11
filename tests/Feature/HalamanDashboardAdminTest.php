@@ -1,6 +1,14 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    $this->actingAs(User::factory()->admin()->create());
+});
 
 test('dashboard admin menampilkan ringkasan, jadwal, pembayaran, stok, dan pendaftar', function () {
     Carbon::setTestNow('2026-11-04 08:00:00');

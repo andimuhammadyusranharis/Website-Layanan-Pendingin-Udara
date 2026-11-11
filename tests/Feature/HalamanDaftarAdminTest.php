@@ -1,5 +1,14 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    $this->actingAs(User::factory()->admin()->create());
+});
+
 test('pesanan menampilkan daftar, menandai menu aktif, dan membagi per halaman', function () {
     $this->get('/admin/pesanan')
         ->assertOk()
