@@ -67,10 +67,18 @@
                 <span class="material-symbols-outlined text-[20px]" aria-hidden="true">person</span>
                 <span class="absolute -right-0.5 -bottom-0.5 size-3 rounded-full bg-status-success ring-2 ring-white" aria-hidden="true"></span>
             </span>
-            <span class="flex min-w-0 flex-col">
+            <span class="flex min-w-0 flex-1 flex-col">
                 <span class="truncate text-[14px] leading-5 font-semibold text-on-surface">{{ $namaAdmin }}</span>
                 <span class="text-[12px] leading-4 font-semibold text-text-secondary">Admin & Pemilik</span>
             </span>
+            @auth
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" aria-label="Keluar" title="Keluar" class="flex size-9 items-center justify-center rounded-full text-text-secondary transition-colors duration-200 hover:bg-white hover:text-status-danger">
+                        <span class="material-symbols-outlined text-[20px]" aria-hidden="true">logout</span>
+                    </button>
+                </form>
+            @endauth
         </div>
     </div>
 </aside>

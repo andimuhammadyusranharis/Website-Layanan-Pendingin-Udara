@@ -119,3 +119,47 @@ document.querySelectorAll('form[data-konfirmasi]').forEach((form) => {
         }
     });
 });
+
+// Tombol data-lihat-sandi="id-input" menampilkan atau menyembunyikan isi kolom kata sandi.
+document.querySelectorAll('[data-lihat-sandi]').forEach((tombol) => {
+    const input = document.getElementById(tombol.dataset.lihatSandi);
+    const ikon = tombol.querySelector('.material-symbols-outlined');
+
+    tombol.addEventListener('click', () => {
+        const terlihat = input.type === 'password';
+
+        input.type = terlihat ? 'text' : 'password';
+        tombol.setAttribute('aria-pressed', String(terlihat));
+        tombol.setAttribute('aria-label', terlihat ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+        if (ikon) {
+            ikon.textContent = terlihat ? 'visibility_off' : 'visibility';
+        }
+    });
+});
+
+// Indikator kekuatan kata sandi. Hanya panduan, aturan sebenarnya tetap divalidasi di server (minimal 8 karakter).
+document.querySelectorAll('input[data-kekuatan-sandi]').forEach((input) => {
+    const wadah = document.getElementById(input.dataset.kekuatanSandi);
+    const batang = [...wadah.querySelectorAll('[data-batang]')];
+    const label = wadah.querySelector('[data-label]');
+    const tingkat = [
+        { teks: 'Terlalu pendek, minimal 8 karakter', warna: 'bg-status-danger' },
+        { teks: 'Cukup. Tambahkan angka atau huruf besar agar lebih kuat', warna: 'bg-status-warning' },
+        { teks: 'Kuat', warna: 'bg-status-success' },
+    ];
+
+    input.addEventListener('input', () => {
+        const sandi = input.value;
+        const ragam = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter((pola) => pola.test(sandi)).length;
+        const nilai = sandi.length === 0 ? -1 : sandi.length < 8 ? 0 : ragam >= 3 || sandi.length >= 12 ? 2 : 1;
+
+        batang.forEach((elemen, indeks) => {
+            elemen.classList.remove('bg-surface-container-high', ...tingkat.map((t) => t.warna));
+            elemen.classList.add(indeks <= nilai ? tingkat[nilai].warna : 'bg-surface-container-high');
+        });
+
+        if (label) {
+            label.textContent = nilai < 0 ? wadah.dataset.labelAwal : tingkat[nilai].teks;
+        }
+    });
+});
