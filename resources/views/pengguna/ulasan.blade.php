@@ -61,16 +61,17 @@
                 </ul>
             </div>
 
-            {{-- Penilaian per aspek --}}
-            <div class="grid gap-4 sm:grid-cols-3">
-                @foreach ($ringkasan['aspek'] as $aspek)
-                    <div class="rounded-2xl border border-border-subtle bg-surface-container-lowest p-5 text-center">
-                        <p class="text-headline-md text-primary">{{ number_format($aspek['nilai'], 1, ',', '.') }}</p>
-                        <p class="text-body-md text-text-secondary">{{ $aspek['nama'] }}</p>
-                    </div>
-                @endforeach
-            </div>
-
+                        {{-- Penilaian per aspek --}}
+            @if (!empty($ringkasan['aspek']))
+                <div class="grid gap-4 sm:grid-cols-3">
+                    @foreach ($ringkasan['aspek'] as $aspek)
+                        <div class="rounded-2xl border border-border-subtle bg-surface-container-lowest p-5 text-center">
+                            <p class="text-headline-md text-primary">{{ number_format($aspek['nilai'], 1, ',', '.') }}</p>
+                            <p class="text-body-md text-text-secondary">{{ $aspek['nama'] }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
             {{-- Filter --}}
             <div class="space-y-4">
                 <div class="flex flex-wrap gap-2" role="group" aria-label="Filter kategori">
