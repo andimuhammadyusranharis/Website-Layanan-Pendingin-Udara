@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 test('halaman pengguna tampil dengan header, footer, dan data sesuai kontrak', function (string $path, string $view, array $variabel) {
     $response = $this->get($path);

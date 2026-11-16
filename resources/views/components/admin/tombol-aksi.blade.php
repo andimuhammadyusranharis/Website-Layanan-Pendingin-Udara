@@ -1,9 +1,11 @@
 {{--
     Tombol aksi yang mengirim form ke route admin. Selama route belum dibuat, tombol tampil
     dengan gaya yang sama tetapi nonaktif, supaya tata letak tidak berubah saat backend tersambung.
-    $konfirmasi: pertanyaan yang ditampilkan sebelum form dikirim, untuk aksi yang tidak bisa dibatalkan.
+    $konfirmasi: pesan di dialog konfirmasi sebelum form dikirim, untuk aksi yang tidak bisa dibatalkan.
+    $judulKonfirmasi dan $tombolKonfirmasi: judul dialog dan label tombol lanjut (bawaannya teks tombol ini).
+    Varian tolak tampil sebagai dialog bahaya (merah).
 --}}
-@props(['route', 'parameter' => [], 'varian' => 'utama', 'metode' => 'POST', 'konfirmasi' => null])
+@props(['route', 'parameter' => [], 'varian' => 'utama', 'metode' => 'POST', 'konfirmasi' => null, 'judulKonfirmasi' => null, 'tombolKonfirmasi' => null])
 
 @php
     $tersedia = Route::has($route);
@@ -18,7 +20,12 @@
 <form
     method="POST"
     @if ($tersedia) action="{{ route($route, $parameter) }}" @endif
-    @if ($konfirmasi) data-konfirmasi="{{ $konfirmasi }}" @endif
+    @if ($konfirmasi)
+        data-konfirmasi="{{ $konfirmasi }}"
+        data-konfirmasi-varian="{{ $varian === 'tolak' ? 'bahaya' : 'biasa' }}"
+        @if ($judulKonfirmasi) data-konfirmasi-judul="{{ $judulKonfirmasi }}" @endif
+        @if ($tombolKonfirmasi) data-konfirmasi-tombol="{{ $tombolKonfirmasi }}" @endif
+    @endif
     {{ $attributes->only('class') }}
 >
     @csrf

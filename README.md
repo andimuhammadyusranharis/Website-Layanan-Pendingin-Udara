@@ -44,7 +44,7 @@ npm install
 npm run dev
 ```
 
-Folder proyek sebaiknya berada di direktori yang dikelola Herd supaya situs langsung terdaftar. Akun uji hasil seeder: `[diisi koordinator]`.
+Folder proyek sebaiknya berada di direktori yang dikelola Herd supaya situs langsung terdaftar. Akun uji hasil seeder: `admin@tigaputrateknik.test`.
 
 ## Tim
 

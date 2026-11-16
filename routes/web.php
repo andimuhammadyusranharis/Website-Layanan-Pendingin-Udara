@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
 Route::get('/toko', [TokoController::class, 'index'])->name('toko.index');
 Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
@@ -41,5 +42,5 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::get('/layanan', [AdminLayananController::class, 'index'])->name('layanan.index');
+    Route::resource('layanan', AdminLayananController::class)->except('show');
 });

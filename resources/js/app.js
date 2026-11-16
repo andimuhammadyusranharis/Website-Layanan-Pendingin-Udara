@@ -111,13 +111,90 @@ document.querySelectorAll('select[data-kirim-otomatis]').forEach((pilihan) => {
     pilihan.addEventListener('change', () => pilihan.form?.requestSubmit());
 });
 
-// Form dengan data-konfirmasi meminta persetujuan dulu sebelum dikirim, untuk aksi yang tidak bisa dibatalkan.
-document.querySelectorAll('form[data-konfirmasi]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
-        if (!window.confirm(form.dataset.konfirmasi)) {
-            event.preventDefault();
+/**
+ * Form dengan data-konfirmasi meminta persetujuan dulu lewat dialog konfirmasi sebelum dikirim.
+ * Atribut opsional: data-konfirmasi-judul, data-konfirmasi-tombol (bawaannya teks tombol kirim),
+ * dan data-konfirmasi-varian="bahaya" untuk aksi merusak. Tanpa dialog di halaman, dipakai confirm bawaan browser.
+ */
+const dialogKonfirmasi = document.querySelector('dialog[data-dialog-konfirmasi]');
+let formMenunggu = null;
+
+if (dialogKonfirmasi) {
+    const tombolLanjut = dialogKonfirmasi.querySelector('[data-dialog-lanjut]');
+    const tombolBatal = dialogKonfirmasi.querySelector('[data-dialog-batal]');
+
+    tombolBatal.addEventListener('click', () => dialogKonfirmasi.close());
+
+    tombolLanjut.addEventListener('click', () => {
+        const form = formMenunggu;
+
+        tombolLanjut.disabled = true;
+        dialogKonfirmasi.close();
+        form?.submit();
+    });
+
+    // Klik di luar kotak dialog (pada latar gelap) menutupnya.
+    dialogKonfirmasi.addEventListener('click', (event) => {
+        if (event.target === dialogKonfirmasi) {
+            dialogKonfirmasi.close();
         }
     });
+
+    dialogKonfirmasi.addEventListener('close', () => {
+        formMenunggu = null;
+        tombolLanjut.disabled = false;
+    });
+}
+
+document.querySelectorAll('form[data-konfirmasi]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        if (!dialogKonfirmasi) {
+            if (window.confirm(form.dataset.konfirmasi)) {
+                form.submit();
+            }
+
+            return;
+        }
+
+        const bahaya = form.dataset.konfirmasiVarian === 'bahaya';
+
+        formMenunggu = form;
+        dialogKonfirmasi.dataset.varian = bahaya ? 'bahaya' : 'biasa';
+        dialogKonfirmasi.querySelector('[data-dialog-ikon]').textContent = bahaya ? 'warning' : 'help';
+        dialogKonfirmasi.querySelector('[data-dialog-judul]').textContent = form.dataset.konfirmasiJudul || 'Konfirmasi tindakan';
+        dialogKonfirmasi.querySelector('[data-dialog-pesan]').textContent = form.dataset.konfirmasi;
+        dialogKonfirmasi.querySelector('[data-dialog-lanjut]').textContent =
+            form.dataset.konfirmasiTombol || form.querySelector('button[type="submit"]')?.textContent.trim() || 'Ya, lanjutkan';
+        dialogKonfirmasi.showModal();
+    });
+});
+
+/**
+ * Notifikasi hasil aksi: hilang sendiri setelah 6 detik, kecuali yang gagal. Pewaktu berhenti
+ * saat kursor di atasnya atau fokus ada di dalamnya, supaya pesan sempat dibaca.
+ */
+document.querySelectorAll('[data-notifikasi]').forEach((notifikasi) => {
+    let pewaktu = null;
+
+    const tutup = () => {
+        notifikasi.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => notifikasi.parentElement?.remove(), 200);
+    };
+    const mulai = () => {
+        if (notifikasi.dataset.notifikasi !== 'galat') {
+            pewaktu = setTimeout(tutup, 6000);
+        }
+    };
+    const henti = () => clearTimeout(pewaktu);
+
+    notifikasi.querySelector('[data-notifikasi-tutup]')?.addEventListener('click', tutup);
+    notifikasi.addEventListener('mouseenter', henti);
+    notifikasi.addEventListener('mouseleave', mulai);
+    notifikasi.addEventListener('focusin', henti);
+    notifikasi.addEventListener('focusout', mulai);
+    mulai();
 });
 
 // Tombol data-lihat-sandi="id-input" menampilkan atau menyembunyikan isi kolom kata sandi.

@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\KategoriLayanan;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\LayananRequest;
+use App\Models\Layanan;
+use App\Services\LayananService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -10,7 +15,14 @@ use Illuminate\View\View;
 class LayananController extends Controller
 {
     /**
-     * Kelola layanan, tarif per jenis AC, dan jenis AC. Datanya masih dummy sampai tabel layanan tersedia.
+     * Constructor dijalankan otomatis setiap controller ini dibuat. Laravel membuat object
+     * LayananService dan menyuntikkannya, jadi tidak perlu `new LayananService()` di tiap method.
+     */
+    public function __construct(private readonly LayananService $layananService) {}
+
+    /**
+     * Kelola layanan, tarif per jenis AC, dan jenis AC. Layanan sudah dari database,
+     * sedangkan tarif dan jenis AC masih dummy sampai tabelnya tersedia.
      */
     public function index(Request $request): View
     {
@@ -21,49 +33,85 @@ class LayananController extends Controller
             'status' => (string) $request->query('status', ''),
         ];
 
-        $semuaLayanan = collect(self::layananDummy());
         $jenisAc = collect(self::jenisAcDummy());
-
-        $layanan = $semuaLayanan
-            ->when($filter['cari'] !== '', fn ($data) => $data->filter(
-                fn (array $item): bool => Str::contains($item['nama'], $filter['cari'], ignoreCase: true),
-            ))
-            ->when($filter['status'] !== '', fn ($data) => $data->where('aktif', $filter['status'] === 'aktif'));
 
         return view('admin.layanan.index', [
             'tab' => $tab,
-            'jumlahLayanan' => $semuaLayanan->count(),
-            'layanan' => $layanan->values()->all(),
+            'jumlahLayanan' => $this->layananService->jumlah(),
+            'layanan' => $this->layananService->daftar($filter['cari'], $filter['status']),
             'jenisAc' => $jenisAc->filter(
                 fn (array $item): bool => $filter['cari'] === '' || Str::contains($item['nama'], $filter['cari'], ignoreCase: true),
             )->values()->all(),
             'semuaJenisAc' => $jenisAc->all(),
             'tarif' => self::tarifDummy(),
             'filter' => $filter,
-            'pilihanStatus' => ['aktif' => 'Aktif', 'nonaktif' => 'Nonaktif'],
+            'pilihanStatus' => [
+                LayananService::STATUS_AKTIF => 'Aktif',
+                LayananService::STATUS_NONAKTIF => 'Nonaktif',
+            ],
         ]);
     }
 
-    /**
-     * @return list<array{id: int, nama: string, deskripsi: string, tarif_mulai: int, bagi_hasil: int, aktif: bool}>
-     */
-    public static function layananDummy(): array
+    public function create(): View
     {
-        return [
-            ['id' => 1, 'nama' => 'Cuci AC', 'deskripsi' => 'Bersihkan unit indoor dan outdoor', 'tarif_mulai' => 75000, 'bagi_hasil' => 50, 'aktif' => true],
-            ['id' => 2, 'nama' => 'Perbaikan', 'deskripsi' => 'Cek dan perbaiki kerusakan AC', 'tarif_mulai' => 100000, 'bagi_hasil' => 40, 'aktif' => true],
-            ['id' => 3, 'nama' => 'Pasang baru', 'deskripsi' => 'Pasang unit AC baru beserta pipa', 'tarif_mulai' => 350000, 'bagi_hasil' => 40, 'aktif' => true],
-            ['id' => 4, 'nama' => 'Bongkar pasang', 'deskripsi' => 'Pindahkan unit AC ke lokasi lain', 'tarif_mulai' => 250000, 'bagi_hasil' => 40, 'aktif' => true],
-            ['id' => 5, 'nama' => 'Isi freon', 'deskripsi' => 'Tambah atau isi ulang freon', 'tarif_mulai' => 150000, 'bagi_hasil' => 40, 'aktif' => true],
-            ['id' => 6, 'nama' => 'Konsultasi dan survei', 'deskripsi' => 'Untuk AC central, multi split, VRF, dan ducted', 'tarif_mulai' => 50000, 'bagi_hasil' => 50, 'aktif' => true],
-            ['id' => 7, 'nama' => 'Paket cuci + isi freon', 'deskripsi' => 'Promo musim kemarau', 'tarif_mulai' => 200000, 'bagi_hasil' => 45, 'aktif' => false],
-        ];
+        return view('admin.layanan.create', [
+            'opsiKategori' => KategoriLayanan::opsi(),
+            'layanan' => new Layanan([
+                'keterangan_harga' => 'Mulai dari',
+                'bagi_hasil' => 40,
+                'urutan' => 0,
+                'aktif' => true,
+            ]),
+        ]);
+    }
+
+    public function store(LayananRequest $request): RedirectResponse
+    {
+        $layanan = $this->layananService->simpan(
+            $request->safe()->except(['gambar', 'hapus_gambar']),
+            $request->file('gambar'),
+        );
+
+        return redirect()
+            ->route('admin.layanan.index')
+            ->with('status', 'Layanan '.$layanan->nama.' berhasil ditambahkan.');
+    }
+
+    public function edit(Layanan $layanan): View
+    {
+        return view('admin.layanan.edit', [
+            'opsiKategori' => KategoriLayanan::opsi(),
+            'layanan' => $layanan,
+        ]);
+    }
+
+    public function update(LayananRequest $request, Layanan $layanan): RedirectResponse
+    {
+        $this->layananService->perbarui(
+            $layanan,
+            $request->safe()->except(['gambar', 'hapus_gambar']),
+            $request->file('gambar'),
+            $request->boolean('hapus_gambar'),
+        );
+
+        return redirect()
+            ->route('admin.layanan.index')
+            ->with('status', 'Layanan '.$layanan->nama.' berhasil diperbarui.');
+    }
+
+    public function destroy(Layanan $layanan): RedirectResponse
+    {
+        $this->layananService->hapus($layanan);
+
+        return redirect()
+            ->route('admin.layanan.index')
+            ->with('status', 'Layanan '.$layanan->nama.' berhasil dihapus.');
     }
 
     /**
      * @return list<array{id: int, nama: string, keterangan: string}>
      */
-    public static function jenisAcDummy(): array
+    private static function jenisAcDummy(): array
     {
         return [
             ['id' => 1, 'nama' => 'Split 1/2 - 1 PK', 'keterangan' => 'AC dinding rumah tangga'],
@@ -78,7 +126,7 @@ class LayananController extends Controller
      *
      * @return array<int, array<int, ?int>>
      */
-    public static function tarifDummy(): array
+    private static function tarifDummy(): array
     {
         return [
             1 => [1 => 75000, 2 => 100000, 3 => 200000, 4 => 250000],

@@ -128,3 +128,32 @@
     --spacing-space-lg: 1.5rem;
     --spacing-space-xl: 2.5rem;
 }
+
+/* Dialog konfirmasi dan notifikasi admin: muncul dengan gerak singkat, dimatikan bila pengguna meminta gerakan dikurangi. */
+@keyframes muncul-halus {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+dialog[data-dialog-konfirmasi][open],
+[data-notifikasi] {
+    animation: muncul-halus 180ms ease-out;
+}
+
+/* Halaman di belakang dialog tidak ikut tergulir. */
+body:has(dialog[open]) {
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    dialog[data-dialog-konfirmasi][open],
+    [data-notifikasi] {
+        animation: none;
+    }
+}
