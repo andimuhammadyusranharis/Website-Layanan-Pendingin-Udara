@@ -1,5 +1,5 @@
 <x-layouts.admin title="Layanan & Tarif">
-    {{-- Variabel: $tab, $jumlahLayanan, $layanan, $jenisAc, $semuaJenisAc, $tarif, $filter, $pilihanStatus --}}
+    {{-- Variabel: $tab, $jumlahLayanan, $layanan (Collection Layanan), $jenisAc, $semuaJenisAc, $tarif, $filter, $pilihanStatus --}}
     @php
         $rupiah = fn (int $nilai): string => 'Rp '.number_format($nilai, 0, ',', '.');
 
@@ -57,14 +57,34 @@
                             <tbody class="{{ $kelasIsiTabel }}">
                                 @foreach ($layanan as $item)
                                     <tr>
-                                        <td class="max-w-[280px] px-4 py-3.5">
-                                            <span class="block text-[16px] font-semibold text-on-surface">{{ $item['nama'] }}</span>
-                                            <span class="block text-[14px] leading-5 text-text-secondary">{{ $item['deskripsi'] }}</span>
+                                        <td class="max-w-[320px] px-4 py-3.5">
+                                            <div class="flex items-center gap-3">
+                                                @if ($item->url_gambar && is_file(public_path($item->url_gambar)))
+                                                    <img src="{{ asset($item->url_gambar) }}" alt="" loading="lazy" class="size-12 shrink-0 rounded-lg border border-border-subtle object-cover" />
+                                                @else
+                                                    <span class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-surface-tint text-primary-container" title="Belum ada foto">
+                                                        <span class="material-symbols-outlined text-[24px]" aria-hidden="true">ac_unit</span>
+                                                    </span>
+                                                @endif
+                                                <div class="min-w-0">
+                                                    <span class="block text-[16px] font-semibold text-on-surface">{{ $item->nama }}</span>
+                                                    <span class="block text-[14px] leading-5 text-text-secondary">{{ $item->ringkasan }}</span>
+                                                    @if ($item->kategori)
+                                                        <span class="block text-[13px] leading-[18px] text-text-secondary">{{ $item->kategori->label() }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td class="px-4 py-3.5 text-[17px] font-bold whitespace-nowrap text-on-secondary-fixed-variant tabular-nums">{{ $rupiah($item['tarif_mulai']) }}</td>
-                                        <td class="px-4 py-3.5 text-[16px] tabular-nums">{{ $item['bagi_hasil'] }}%</td>
+                                        <td class="px-4 py-3.5 text-[17px] font-bold whitespace-nowrap text-on-secondary-fixed-variant tabular-nums">
+                                            @if ($item->perlu_survei || $item->tarif_mulai === null)
+                                                <span class="text-[15px] font-semibold text-text-secondary">Setelah survei</span>
+                                            @else
+                                                {{ $rupiah($item->tarif_mulai) }}
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3.5 text-[16px] tabular-nums">{{ $item->bagi_hasil }}%</td>
                                         <td class="px-4 py-3.5">
-                                            @if ($item['aktif'])
+                                            @if ($item->aktif)
                                                 <x-admin.lencana warna="hijau">Aktif</x-admin.lencana>
                                             @else
                                                 <x-admin.lencana warna="netral">Nonaktif</x-admin.lencana>
@@ -72,14 +92,15 @@
                                         </td>
                                         <td class="px-4 py-3.5">
                                             <div class="flex gap-2">
-                                                <x-admin.tombol-tautan route="admin.layanan.edit" :parameter="$item['id']" :aria-label="'Ubah layanan '.$item['nama']">Ubah</x-admin.tombol-tautan>
+                                                <x-admin.tombol-tautan route="admin.layanan.edit" :parameter="$item->id_layanan" :aria-label="'Ubah layanan '.$item->nama">Ubah</x-admin.tombol-tautan>
                                                 <x-admin.tombol-aksi
                                                     route="admin.layanan.destroy"
-                                                    :parameter="$item['id']"
+                                                    :parameter="$item->id_layanan"
                                                     metode="DELETE"
                                                     varian="tolak"
-                                                    :konfirmasi="'Hapus layanan '.$item['nama'].'? Tindakan ini tidak bisa dibatalkan.'"
-                                                    :aria-label="'Hapus layanan '.$item['nama']"
+                                                    :konfirmasi="'Hapus layanan '.$item->nama.'? Tindakan ini tidak bisa dibatalkan.'"
+                                                    judul-konfirmasi="Hapus layanan?"
+                                                    :aria-label="'Hapus layanan '.$item->nama"
                                                 >Hapus</x-admin.tombol-aksi>
                                             </div>
                                         </td>
@@ -106,13 +127,13 @@
                             @foreach ($layanan as $item)
                                 <tr>
                                     <th scope="row" class="px-4 py-3.5 font-semibold text-on-surface">
-                                        {{ $item['nama'] }}
-                                        @unless ($item['aktif'])
+                                        {{ $item->nama }}
+                                        @unless ($item->aktif)
                                             <span class="ml-1 text-[13px] leading-[18px] font-normal text-text-secondary">(nonaktif)</span>
                                         @endunless
                                     </th>
                                     @foreach ($semuaJenisAc as $jenis)
-                                        @php($nilai = $tarif[$item['id']][$jenis['id']] ?? null)
+                                        @php($nilai = $tarif[$item->id_layanan][$jenis['id']] ?? null)
                                         <td class="px-4 py-3.5 text-right whitespace-nowrap tabular-nums">
                                             @if ($nilai)
                                                 <span class="font-semibold text-on-secondary-fixed-variant">{{ $rupiah($nilai) }}</span>
@@ -159,6 +180,7 @@
                                                     metode="DELETE"
                                                     varian="tolak"
                                                     :konfirmasi="'Hapus jenis AC '.$jenis['nama'].'? Tarifnya juga ikut terhapus.'"
+                                                    judul-konfirmasi="Hapus jenis AC?"
                                                     :aria-label="'Hapus jenis AC '.$jenis['nama']"
                                                 >Hapus</x-admin.tombol-aksi>
                                             </div>

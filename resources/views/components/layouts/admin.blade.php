@@ -27,6 +27,9 @@
             </div>
         </div>
 
+        <x-admin.dialog-konfirmasi />
+        <x-admin.notifikasi />
+
         @stack('scripts')
     </body>
 </html>
