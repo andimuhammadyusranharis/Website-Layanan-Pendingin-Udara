@@ -135,7 +135,7 @@
                                         @if ($item['status'] === 'menunggu' && $tab === 'verifikasi')
                                             <div class="flex gap-2">
                                                 <x-admin.tombol-aksi route="admin.pembayaran.setujui" :parameter="$item['id']" varian="setuju" :aria-label="'Setujui pembayaran '.$item['kode_pesanan']">Setujui</x-admin.tombol-aksi>
-                                                <x-admin.tombol-aksi route="admin.pembayaran.tolak" :parameter="$item['id']" varian="tolak" :konfirmasi="'Tolak pembayaran '.$item['kode_pesanan'].'?'" :aria-label="'Tolak pembayaran '.$item['kode_pesanan']">Tolak</x-admin.tombol-aksi>
+                                                <x-admin.tombol-aksi route="admin.pembayaran.tolak" :parameter="$item['id']" varian="tolak" :konfirmasi="'Tolak pembayaran '.$item['kode_pesanan'].'?'" judul-konfirmasi="Tolak pembayaran?" :aria-label="'Tolak pembayaran '.$item['kode_pesanan']">Tolak</x-admin.tombol-aksi>
                                             </div>
                                         @else
                                             <x-admin.lencana :warna="$statusBayar[$item['status']]['warna']">{{ $statusBayar[$item['status']]['label'] }}</x-admin.lencana>
