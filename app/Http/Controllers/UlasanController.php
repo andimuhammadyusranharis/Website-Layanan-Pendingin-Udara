@@ -2,33 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UlasanService;
 use Illuminate\View\View;
 
 class UlasanController extends Controller
 {
-    /**
-     * Tampilkan ulasan pelanggan. Datanya masih dummy sampai tabel review tersedia.
-     */
+    public function __construct(
+        private readonly UlasanService $ulasanService
+    ) {}
+
     public function index(): View
     {
+        $ringkasan = $this->ulasanService->getRingkasanRating();
+
+        $ulasan = $this->ulasanService->getUlasanTampil()
+            ->map(fn ($item) => [
+                'nama' => $item->nama_pelanggan,
+                'lokasi' => '-',
+                'kategori' => 'lainnya',
+                'layanan' => 'Ulasan pelanggan',
+                'rating' => $item->rating,
+                'komentar' => $item->komentar,
+                'teknisi' => null,
+                'tanggal' => $item->created_at?->toDateString()
+                    ?? now()->toDateString(),
+            ])
+            ->all();
+
         return view('pengguna.ulasan', [
-            'ringkasan' => self::ringkasanDummy(),
-            'kategoriUlasan' => [
-                ['slug' => 'cuci-ac-split', 'nama' => 'Cuci AC Split', 'jumlah' => 74],
-                ['slug' => 'isi-freon', 'nama' => 'Isi Freon', 'jumlah' => 26],
-                ['slug' => 'perbaikan-kelistrikan', 'nama' => 'Perbaikan Kelistrikan', 'jumlah' => 15],
-                ['slug' => 'bongkar-pasang', 'nama' => 'Bongkar Pasang', 'jumlah' => 9],
-                ['slug' => 'pembelian-komponen', 'nama' => 'Pembelian Komponen', 'jumlah' => 4],
+            'ringkasan' => [
+                'rata_rata' => $ringkasan['rata_rata'],
+                'jumlah' => $ringkasan['total'],
+                'persen_puas' => $ringkasan['total'] > 0
+                    ? (int) round(
+                        ($ringkasan['distribusi'][5] + $ringkasan['distribusi'][4])
+                        / $ringkasan['total'] * 100
+                    )
+                    : 0,
+                'sebaran' => $ringkasan['distribusi'],
             ],
-            'ulasan' => self::ulasanDummy(),
+            'kategoriUlasan' => [],
+            'ulasan' => $ulasan,
         ]);
     }
 
-    /**
-     * Ringkasan rating dummy. Dipakai juga oleh beranda agar angkanya sama di kedua halaman.
-     *
-     * @return array{rata_rata: float, jumlah: int, persen_puas: int, sebaran: array<int, int>}
-     */
     public static function ringkasanDummy(): array
     {
         return [
@@ -39,11 +56,6 @@ class UlasanController extends Controller
         ];
     }
 
-    /**
-     * Ulasan dummy, terbaru lebih dulu. Dipakai juga oleh beranda.
-     *
-     * @return list<array{nama: string, lokasi: string, kategori: string, layanan: string, rating: int, komentar: string, teknisi: ?string, tanggal: string}>
-     */
     public static function ulasanDummy(): array
     {
         return [

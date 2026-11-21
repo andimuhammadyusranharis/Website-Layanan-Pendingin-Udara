@@ -13,6 +13,7 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
@@ -42,5 +43,10 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+
+    // Kelola ulasan pelanggan
+    Route::get('/ulasan', [AdminUlasanController::class, 'index'])->name('ulasan.index');
+    Route::patch('/ulasan/{id}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
+
     Route::resource('layanan', AdminLayananController::class)->except('show');
 });
