@@ -5,52 +5,110 @@ namespace App\Services;
 use App\Models\Ulasan;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Logika bisnis ulasan. Controller cukup memanggil class ini, sehingga query dan
+ * perhitungan rating tidak ditulis di controller maupun di view.
+ */
 class UlasanService
 {
-    public function __construct(
-        private readonly Ulasan $ulasan
-    ) {}
+    public const STATUS_TAMPIL = 'tampil';
 
-    public function getUlasanTampil(): Collection
+    public const STATUS_TERSEMBUNYI = 'tersembunyi';
+
+    /**
+     * Rating dari angka ini ke atas dihitung sebagai pelanggan puas.
+     */
+    public const BATAS_PUAS = 4;
+
+    /**
+     * Constructor dijalankan otomatis oleh service container Laravel saat class ini dibutuhkan.
+     * Object Ulasan ikut disuntikkan dan dipakai sebagai pintu masuk query.
+     */
+    public function __construct(private readonly Ulasan $ulasan) {}
+
+    /**
+     * Semua ulasan untuk panel admin, terbaru lebih dulu.
+     *
+     * @return Collection<int, Ulasan>
+     */
+    public function daftar(string $cari = '', string $status = ''): Collection
     {
         return $this->ulasan->newQuery()
-            ->where('tampil', true)
+            ->when($cari !== '', fn ($query) => $query->where('nama_pelanggan', 'like', '%'.$cari.'%'))
+            ->when(
+                in_array($status, [self::STATUS_TAMPIL, self::STATUS_TERSEMBUNYI], true),
+                fn ($query) => $query->where('tampil', $status === self::STATUS_TAMPIL),
+            )
             ->latest()
+            ->orderByDesc('id_ulasan')
             ->get();
     }
 
-    public function getRingkasanRating(): array
+    /**
+     * Ulasan yang boleh dilihat pelanggan.
+     *
+     * @return Collection<int, Ulasan>
+     */
+    public function daftarTampil(): Collection
     {
-        $ulasan = $this->ulasan->newQuery()
-            ->where('tampil', true);
+        return $this->daftar(status: self::STATUS_TAMPIL);
+    }
 
-        $total = (clone $ulasan)->count();
+    /**
+     * Rata-rata, jumlah, persen puas, dan sebaran rating. Hanya ulasan yang tampil ikut dihitung.
+     * Satu query dengan groupBy cukup untuk semuanya.
+     *
+     * @return array{rata_rata: float, jumlah: int, persen_puas: int, sebaran: array<int, int>}
+     */
+    public function ringkasan(): array
+    {
+        $jumlahPerBintang = $this->ulasan->newQuery()
+            ->where('tampil', true)
+            ->selectRaw('rating, count(*) as total')
+            ->groupBy('rating')
+            ->pluck('total', 'rating');
+
+        $sebaran = [];
+        foreach ([5, 4, 3, 2, 1] as $bintang) {
+            $sebaran[$bintang] = (int) ($jumlahPerBintang[$bintang] ?? 0);
+        }
+
+        $jumlah = array_sum($sebaran);
+
+        if ($jumlah === 0) {
+            return ['rata_rata' => 0.0, 'jumlah' => 0, 'persen_puas' => 0, 'sebaran' => $sebaran];
+        }
+
+        $totalBintang = 0;
+        $jumlahPuas = 0;
+        foreach ($sebaran as $bintang => $banyak) {
+            $totalBintang += $bintang * $banyak;
+
+            if ($bintang >= self::BATAS_PUAS) {
+                $jumlahPuas += $banyak;
+            }
+        }
 
         return [
-            'total' => $total,
-            'rata_rata' => $total > 0
-                ? round((clone $ulasan)->avg('rating'), 1)
-                : 0,
-            'distribusi' => collect(range(5, 1))
-                ->mapWithKeys(fn ($rating) => [
-                    $rating => (clone $ulasan)->where('rating', $rating)->count(),
-                ])
-                ->all(),
+            'rata_rata' => round($totalBintang / $jumlah, 1),
+            'jumlah' => $jumlah,
+            'persen_puas' => (int) round($jumlahPuas / $jumlah * 100),
+            'sebaran' => $sebaran,
         ];
     }
 
-    public function getSemuaUlasan(): Collection
+    public function jumlah(): int
     {
-        return $this->ulasan->newQuery()
-            ->latest()
-            ->get();
+        return $this->ulasan->newQuery()->count();
     }
 
-    public function ubahTampilan(int $id): bool
+    /**
+     * Tampilkan atau sembunyikan ulasan dari halaman pelanggan.
+     */
+    public function aturTampil(Ulasan $ulasan, bool $tampil): Ulasan
     {
-        $ulasan = $this->ulasan->newQuery()->findOrFail($id);
-        $ulasan->tampil = ! $ulasan->tampil;
+        $ulasan->update(['tampil' => $tampil]);
 
-        return $ulasan->save();
+        return $ulasan;
     }
 }

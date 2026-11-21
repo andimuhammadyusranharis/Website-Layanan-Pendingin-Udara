@@ -2,50 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ulasan;
 use App\Services\UlasanService;
 use Illuminate\View\View;
 
 class UlasanController extends Controller
 {
-    public function __construct(
-        private readonly UlasanService $ulasanService
-    ) {}
+    /**
+     * Constructor dijalankan otomatis setiap controller ini dibuat. Laravel membuat object
+     * UlasanService dan menyuntikkannya, jadi tidak perlu `new UlasanService()` di tiap method.
+     */
+    public function __construct(private readonly UlasanService $ulasanService) {}
 
+    /**
+     * Tampilkan ulasan pelanggan dari database. Ulasan yang disembunyikan admin tidak ikut.
+     * Bentuk data ke view tetap sama seperti saat masih dummy. Lokasi, layanan, dan teknisi
+     * belum punya kolom di tabel, jadi dikirim kosong dan view menyembunyikannya.
+     */
     public function index(): View
     {
-        $ringkasan = $this->ulasanService->getRingkasanRating();
-
-        $ulasan = $this->ulasanService->getUlasanTampil()
-            ->map(fn ($item) => [
-                'nama' => $item->nama_pelanggan,
-                'lokasi' => '-',
-                'kategori' => 'lainnya',
-                'layanan' => 'Ulasan pelanggan',
-                'rating' => $item->rating,
-                'komentar' => $item->komentar,
-                'teknisi' => null,
-                'tanggal' => $item->created_at?->toDateString()
-                    ?? now()->toDateString(),
-            ])
-            ->all();
-
         return view('pengguna.ulasan', [
-            'ringkasan' => [
-                'rata_rata' => $ringkasan['rata_rata'],
-                'jumlah' => $ringkasan['total'],
-                'persen_puas' => $ringkasan['total'] > 0
-                    ? (int) round(
-                        ($ringkasan['distribusi'][5] + $ringkasan['distribusi'][4])
-                        / $ringkasan['total'] * 100
-                    )
-                    : 0,
-                'sebaran' => $ringkasan['distribusi'],
-            ],
+            'ringkasan' => $this->ulasanService->ringkasan(),
             'kategoriUlasan' => [],
-            'ulasan' => $ulasan,
+            'ulasan' => $this->ulasanService->daftarTampil()
+                ->map(fn (Ulasan $item): array => [
+                    'nama' => $item->nama_pelanggan,
+                    'lokasi' => null,
+                    'kategori' => '',
+                    'layanan' => null,
+                    'rating' => $item->rating,
+                    'komentar' => $item->komentar,
+                    'teknisi' => null,
+                    'tanggal' => ($item->created_at ?? now())->toDateString(),
+                ])
+                ->all(),
         ]);
     }
 
+    /**
+     * Ringkasan rating dummy. Dipakai juga oleh beranda agar angkanya sama di kedua halaman.
+     *
+     * @return array{rata_rata: float, jumlah: int, persen_puas: int, sebaran: array<int, int>}
+     */
     public static function ringkasanDummy(): array
     {
         return [
@@ -56,6 +54,11 @@ class UlasanController extends Controller
         ];
     }
 
+    /**
+     * Ulasan dummy, terbaru lebih dulu. Dipakai juga oleh beranda.
+     *
+     * @return list<array{nama: string, lokasi: string, kategori: string, layanan: string, rating: int, komentar: string, teknisi: ?string, tanggal: string}>
+     */
     public static function ulasanDummy(): array
     {
         return [

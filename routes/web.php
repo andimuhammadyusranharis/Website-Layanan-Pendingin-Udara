@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
 use App\Http\Controllers\Autentikasi\MasukController;
@@ -13,7 +14,6 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UlasanController;
-use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
@@ -44,9 +44,9 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
 
-    // Kelola ulasan pelanggan
+    // Ulasan pelanggan
     Route::get('/ulasan', [AdminUlasanController::class, 'index'])->name('ulasan.index');
-    Route::patch('/ulasan/{id}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
+    Route::patch('/ulasan/{ulasan}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
 });
