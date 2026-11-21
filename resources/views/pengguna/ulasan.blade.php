@@ -123,18 +123,24 @@
                                 <span @class(['flex size-10 shrink-0 items-center justify-center rounded-full text-label-lg', $warnaInisial[$loop->index % count($warnaInisial)]]) aria-hidden="true">{{ $inisial($item['nama']) }}</span>
                                 <figcaption class="flex flex-col">
                                     <span class="text-body-semibold text-text-primary">{{ $item['nama'] }}</span>
-                                    <span class="text-label-sm text-text-secondary">{{ $item['lokasi'] }}</span>
+                                    @if ($item['lokasi'])
+                                        <span class="text-label-sm text-text-secondary">{{ $item['lokasi'] }}</span>
+                                    @endif
                                 </figcaption>
                             </div>
                             <x-pengguna.bintang :nilai="$item['rating']" class="shrink-0" />
                         </div>
 
-                        <p class="self-start rounded-lg bg-surface-tint px-2.5 py-1 text-label-sm text-primary">{{ $item['layanan'] }}</p>
+                        @if ($item['layanan'])
+                            <p class="self-start rounded-lg bg-surface-tint px-2.5 py-1 text-label-sm text-primary">{{ $item['layanan'] }}</p>
+                        @endif
 
                         <blockquote class="text-body-md text-text-primary">{{ $item['komentar'] }}</blockquote>
 
                         <p class="flex flex-wrap justify-between gap-x-4 gap-y-1 border-t border-border-subtle pt-3 text-label-sm text-text-secondary">
-                            <span>{{ $item['teknisi'] ? 'Dikerjakan '.$item['teknisi'] : 'Pembelian di toko' }}</span>
+                            @if ($item['teknisi'])
+                                <span>Dikerjakan {{ $item['teknisi'] }}</span>
+                            @endif
                             <time datetime="{{ $item['tanggal'] }}">{{ Carbon\Carbon::parse($item['tanggal'])->locale('id')->translatedFormat('j F Y') }}</time>
                         </p>
                     </figure>
