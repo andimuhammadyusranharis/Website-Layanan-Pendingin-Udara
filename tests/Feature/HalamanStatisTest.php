@@ -57,3 +57,9 @@ test('alamat halaman statis yang salah menghasilkan 404', function () {
     $this->get('/kebijakan')->assertNotFound();
     $this->get('/syarat-dan-ketentuan')->assertNotFound();
 });
+
+test('halaman masuk menautkan ke kedua halaman statis', function () {
+    $this->get(route('login'))
+        ->assertSee('href="'.route('kebijakan-privasi').'"', false)
+        ->assertSee('href="'.route('syarat').'"', false);
+});

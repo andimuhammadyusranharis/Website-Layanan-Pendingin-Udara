@@ -194,3 +194,10 @@ test('akun non-admin tidak bisa mengelola ulasan', function () {
 test('tamu yang belum masuk diarahkan ke halaman masuk', function () {
     $this->get(route('admin.ulasan.index'))->assertRedirect(route('login'));
 });
+
+test('sidebar admin memuat menu ulasan', function () {
+    $this->actingAs(User::factory()->admin()->create());
+
+    $this->get(route('admin.ulasan.index'))
+        ->assertSee('href="'.route('admin.ulasan.index').'"', false);
+});
