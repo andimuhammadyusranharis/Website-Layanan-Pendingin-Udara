@@ -3,9 +3,11 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
+use App\Http\Controllers\Admin\PelangganController as AdminPelangganController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
+use App\Http\Controllers\Akun\ProfilController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
 use App\Http\Controllers\Autentikasi\MasukController;
@@ -16,7 +18,6 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UlasanController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Akun\ProfilController;
 
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::patch('/ulasan/{ulasan}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
+    Route::resource('pelanggan', AdminPelangganController::class)->only(['index', 'show']);
 });
 
 Route::middleware(['auth', 'peran:pelanggan'])->prefix('akun')->name('akun.')->group(function () {
