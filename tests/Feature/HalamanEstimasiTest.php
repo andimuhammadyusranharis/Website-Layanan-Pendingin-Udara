@@ -63,6 +63,29 @@ test('kombinasi tanpa tarif ditolak dengan pesan yang jelas', function () {
         ->assertSee('Layanan ini tidak tersedia untuk jenis AC tersebut.');
 });
 
+test('layanan yang perlu survei mengarahkan pelanggan ke konsultasi tanpa menghitung tarif', function () {
+    $layanan = Layanan::factory()->create([
+        'nama' => 'Pasang AC Sentral',
+        'perlu_survei' => true,
+    ]);
+    $jenisAc = JenisAc::factory()->create(['nama' => 'Cassette']);
+
+    TarifLayanan::factory()->create([
+        'id_layanan' => $layanan->id_layanan,
+        'id_jenis_ac' => $jenisAc->id_jenis_ac,
+        'tarif' => 500000,
+    ]);
+
+    $this->get(route('estimasi', [
+        'layanan' => $layanan->id_layanan,
+        'jenis_ac' => $jenisAc->id_jenis_ac,
+        'jumlah' => 2,
+    ]))
+        ->assertOk()
+        ->assertSee('Layanan ini memerlukan survei. Silakan hubungi kami untuk konsultasi.')
+        ->assertDontSee('Rp1.000.000');
+});
+
 test('jumlah unit di luar batas ditolak', function () {
     $layanan = Layanan::factory()->create();
     $jenisAc = JenisAc::factory()->create();
