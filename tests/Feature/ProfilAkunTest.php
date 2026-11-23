@@ -124,3 +124,20 @@ it('menolak akun tanpa kata sandi (akun Google)', function () {
         ->put(route('akun.profil.password'), dataPassword())
         ->assertForbidden();
 });
+
+it('menampilkan halaman profil', function () {
+    $this->actingAs($this->user)
+        ->get(route('akun.profil'))
+        ->assertOk()
+        ->assertSee('Data diri')
+        ->assertSee('Ganti kata sandi');
+});
+
+it('menyembunyikan form kata sandi untuk akun tanpa kata sandi', function () {
+    DB::table('users')->where('id', $this->user->id)->update(['password' => null]);
+
+    $this->actingAs($this->user->fresh())
+        ->get(route('akun.profil'))
+        ->assertOk()
+        ->assertDontSee('Kata sandi lama');
+});
