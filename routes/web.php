@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
 use App\Http\Controllers\Autentikasi\MasukController;
@@ -43,4 +44,5 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::resource('layanan', AdminLayananController::class)->except('show');
+    Route::resource('produk', ProdukController::class)->except('show');
 });
