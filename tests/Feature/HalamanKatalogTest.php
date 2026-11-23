@@ -4,6 +4,7 @@ use App\Enums\KategoriLayanan;
 use App\Enums\KategoriProduk;
 use App\Models\Layanan;
 use App\Models\Produk;
+use App\Models\Ulasan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -156,10 +157,13 @@ test('detail layanan nonaktif, terhapus, atau dengan slug salah menghasilkan 404
 });
 
 test('ulasan menampilkan ringkasan rating dan tanggal berbahasa indonesia', function () {
+    Ulasan::factory()->create(['rating' => 5, 'created_at' => '2026-05-18 10:00:00']);
+    Ulasan::factory()->create(['rating' => 4]);
+
     $this->get('/ulasan')
         ->assertOk()
-        ->assertSee('4,9')
-        ->assertSee('Dari 128 ulasan pelanggan')
+        ->assertSee('4,5')
+        ->assertSee('Dari 2 ulasan pelanggan')
         ->assertSee('18 Mei 2026')
         ->assertSee('data-rating="4"', false);
 });
