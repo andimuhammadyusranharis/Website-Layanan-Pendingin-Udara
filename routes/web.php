@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\PelangganController as AdminPelangganController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\TeknisiController as AdminTeknisiController;
 use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
 use App\Http\Controllers\Akun\ProfilController;
 use App\Http\Controllers\Autentikasi\DaftarController;
@@ -57,6 +58,9 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
     Route::resource('pelanggan', AdminPelangganController::class)->only(['index', 'show']);
+    Route::get('/teknisi', [AdminTeknisiController::class, 'index'])->name('teknisi.index');
+    Route::patch('/teknisi/{teknisi}/setujui', [AdminTeknisiController::class, 'setujui'])->name('teknisi.setujui');
+    Route::patch('/teknisi/{teknisi}/tolak', [AdminTeknisiController::class, 'tolak'])->name('teknisi.tolak');
 });
 
 Route::middleware(['auth', 'peran:pelanggan'])->prefix('akun')->name('akun.')->group(function () {
