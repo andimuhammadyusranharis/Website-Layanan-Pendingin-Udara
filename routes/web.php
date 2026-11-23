@@ -16,6 +16,7 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UlasanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Akun\ProfilController;
 
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
@@ -54,4 +55,10 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::patch('/ulasan/{ulasan}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
+});
+
+Route::middleware(['auth', 'peran:pelanggan'])->prefix('akun')->name('akun.')->group(function () {
+    Route::get('/profil', [ProfilController::class, 'edit'])->name('profil');
+    Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
+    Route::put('/profil/password', [ProfilController::class, 'updatePassword'])->name('profil.password');
 });
