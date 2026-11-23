@@ -102,6 +102,31 @@
                     <p class="max-w-[68ch] text-body-md whitespace-pre-line text-text-primary">{{ $layanan['deskripsi_lengkap'] }}</p>
                 </section>
 
+                @if (count($tarifLayanan) > 0)
+                    <section aria-labelledby="judul-tarif" class="flex flex-col gap-3">
+                        <h2 id="judul-tarif" class="text-headline-md text-on-surface">Tarif per jenis AC</h2>
+                        <div class="overflow-x-auto rounded-2xl border border-border-subtle bg-white">
+                            <table class="w-full min-w-[480px] text-left text-body-md">
+                                <thead class="bg-surface-container-low text-label-md text-text-secondary">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3">Jenis AC</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Tarif per unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border-subtle">
+                                    @foreach ($tarifLayanan as $baris)
+                                        <tr>
+                                            <th scope="row" class="px-4 py-3 font-semibold text-text-primary">{{ $baris['nama'] }}</th>
+                                            <td class="px-4 py-3 text-right tabular-nums">{{ $baris['tarif'] === null ? 'Tidak tersedia' : $rupiah($baris['tarif']) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-label-sm text-text-secondary">Tarif akhir dikonfirmasi teknisi setelah melihat kondisi AC.</p>
+                    </section>
+                @endif
+
                 @if (count($layanan['fitur']) > 0)
                     <section aria-labelledby="judul-dikerjakan" class="flex flex-col gap-3">
                         <h2 id="judul-dikerjakan" class="text-headline-md text-on-surface">Yang dikerjakan</h2>

@@ -2,13 +2,16 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\JenisAcController as AdminJenisAcController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
+use App\Http\Controllers\Admin\TarifLayananController as AdminTarifLayananController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
 use App\Http\Controllers\Autentikasi\MasukController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\EstimasiController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TokoController;
@@ -21,6 +24,9 @@ Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan
 Route::get('/toko', [TokoController::class, 'index'])->name('toko.index');
 Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
+
+// Modul T2: halaman estimasi biaya untuk pengguna.
+Route::get('/estimasi', [EstimasiController::class, 'index'])->name('estimasi');
 
 Route::middleware('guest')->group(function () {
     Route::get('/masuk', [MasukController::class, 'create'])->name('login');
@@ -42,5 +48,14 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+
+    // Modul T2: jenis AC dan tarif per jenis AC.
+    Route::prefix('layanan')->name('layanan.')->group(function () {
+        Route::resource('jenis-ac', AdminJenisAcController::class)->except('show');
+    });
+
+    Route::get('layanan/tarif', [AdminTarifLayananController::class, 'edit'])->name('layanan.tarif.edit');
+    Route::put('layanan/tarif', [AdminTarifLayananController::class, 'update'])->name('layanan.tarif.update');
+
     Route::resource('layanan', AdminLayananController::class)->except('show');
 });

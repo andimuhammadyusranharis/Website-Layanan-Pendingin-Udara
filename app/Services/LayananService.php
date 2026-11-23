@@ -82,6 +82,19 @@ class LayananService
     }
 
     /**
+     * Pilihan status untuk filter di halaman admin.
+     *
+     * @return array<string, string>
+     */
+    public function pilihanStatus(): array
+    {
+        return [
+            self::STATUS_AKTIF => 'Aktif',
+            self::STATUS_NONAKTIF => 'Nonaktif',
+        ];
+    }
+
+    /**
      * @param  array<string, mixed>  $data
      */
     public function simpan(array $data, ?UploadedFile $gambar = null): Layanan
