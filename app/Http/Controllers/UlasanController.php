@@ -2,25 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ulasan;
+use App\Services\UlasanService;
 use Illuminate\View\View;
 
 class UlasanController extends Controller
 {
     /**
-     * Tampilkan ulasan pelanggan. Datanya masih dummy sampai tabel review tersedia.
+     * Constructor dijalankan otomatis setiap controller ini dibuat. Laravel membuat object
+     * UlasanService dan menyuntikkannya, jadi tidak perlu `new UlasanService()` di tiap method.
+     */
+    public function __construct(private readonly UlasanService $ulasanService) {}
+
+    /**
+     * Tampilkan ulasan pelanggan dari database. Ulasan yang disembunyikan admin tidak ikut.
+     * Bentuk data ke view tetap sama seperti saat masih dummy. Lokasi, layanan, dan teknisi
+     * belum punya kolom di tabel, jadi dikirim kosong dan view menyembunyikannya.
      */
     public function index(): View
     {
         return view('pengguna.ulasan', [
-            'ringkasan' => self::ringkasanDummy(),
-            'kategoriUlasan' => [
-                ['slug' => 'cuci-ac-split', 'nama' => 'Cuci AC Split', 'jumlah' => 74],
-                ['slug' => 'isi-freon', 'nama' => 'Isi Freon', 'jumlah' => 26],
-                ['slug' => 'perbaikan-kelistrikan', 'nama' => 'Perbaikan Kelistrikan', 'jumlah' => 15],
-                ['slug' => 'bongkar-pasang', 'nama' => 'Bongkar Pasang', 'jumlah' => 9],
-                ['slug' => 'pembelian-komponen', 'nama' => 'Pembelian Komponen', 'jumlah' => 4],
-            ],
-            'ulasan' => self::ulasanDummy(),
+            'ringkasan' => $this->ulasanService->ringkasan(),
+            'kategoriUlasan' => [],
+            'ulasan' => $this->ulasanService->daftarTampil()
+                ->map(fn (Ulasan $item): array => [
+                    'nama' => $item->nama_pelanggan,
+                    'lokasi' => null,
+                    'kategori' => '',
+                    'layanan' => null,
+                    'rating' => $item->rating,
+                    'komentar' => $item->komentar,
+                    'teknisi' => null,
+                    'tanggal' => ($item->created_at ?? now())->toDateString(),
+                ])
+                ->all(),
         ]);
     }
 

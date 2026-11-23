@@ -7,11 +7,13 @@ use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\TarifLayananController as AdminTarifLayananController;
+use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
 use App\Http\Controllers\Autentikasi\MasukController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\EstimasiController;
+use App\Http\Controllers\HalamanStatisController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TokoController;
@@ -27,6 +29,10 @@ Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
 
 // Modul T2: halaman estimasi biaya untuk pengguna.
 Route::get('/estimasi', [EstimasiController::class, 'index'])->name('estimasi');
+
+// Halaman statis
+Route::get('/kebijakan-privasi', [HalamanStatisController::class, 'kebijakanPrivasi'])->name('kebijakan-privasi');
+Route::get('/syarat', [HalamanStatisController::class, 'syarat'])->name('syarat');
 
 Route::middleware('guest')->group(function () {
     Route::get('/masuk', [MasukController::class, 'create'])->name('login');
@@ -56,6 +62,10 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
 
     Route::get('layanan/tarif', [AdminTarifLayananController::class, 'edit'])->name('layanan.tarif.edit');
     Route::put('layanan/tarif', [AdminTarifLayananController::class, 'update'])->name('layanan.tarif.update');
+
+    // Ulasan pelanggan
+    Route::get('/ulasan', [AdminUlasanController::class, 'index'])->name('ulasan.index');
+    Route::patch('/ulasan/{ulasan}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
 });

@@ -42,9 +42,9 @@
             <div class="mx-auto flex w-full max-w-[1280px] flex-col gap-3 px-4 text-[14px] leading-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
                 <p class="text-text-secondary">&copy; {{ now()->year }} {{ config('usaha.nama') }} Pangkep. Seluruh hak cipta dilindungi.</p>
                 <nav aria-label="Tautan bantuan" class="flex flex-wrap items-center gap-x-6 gap-y-2 font-semibold text-text-primary">
-                    <a href="{{ route('kontak.index') }}" class="hover:text-primary">Kebijakan Privasi</a>
+                    <a href="{{ route('kebijakan-privasi') }}" class="hover:text-primary">Kebijakan Privasi</a>
                     <span class="size-1 rounded-full bg-outline-variant" aria-hidden="true"></span>
-                    <a href="{{ route('kontak.index') }}" class="hover:text-primary">Syarat &amp; Ketentuan</a>
+                   <a href="{{ route('syarat') }}" class="hover:text-primary">Syarat &amp; Ketentuan</a>
                     <span class="size-1 rounded-full bg-outline-variant" aria-hidden="true"></span>
                     <a href="{{ config('usaha.whatsapp.tautan') }}" target="_blank" rel="noopener" class="hover:text-primary">Bantuan Teknis</a>
                 </nav>
