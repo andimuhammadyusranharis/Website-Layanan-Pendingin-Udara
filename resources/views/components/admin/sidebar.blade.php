@@ -8,6 +8,7 @@
         ['label' => 'Produk & Stok', 'ikon' => 'inventory_2', 'route' => 'admin.produk.index', 'aktif' => 'admin.produk.*'],
         ['label' => 'Pelanggan', 'ikon' => 'group', 'route' => 'admin.pelanggan.index', 'aktif' => 'admin.pelanggan.*'],
         ['label' => 'Teknisi', 'ikon' => 'engineering', 'route' => 'admin.teknisi.index', 'aktif' => 'admin.teknisi.*'],
+        ['label' => 'Ulasan', 'ikon' => 'reviews', 'route' => 'admin.ulasan.index', 'aktif' => 'admin.ulasan.*'],
         ['label' => 'Laporan', 'ikon' => 'monitoring', 'route' => 'admin.laporan.index', 'aktif' => 'admin.laporan.*'],
         ['label' => 'Konten Beranda', 'ikon' => 'web', 'route' => 'admin.beranda.index', 'aktif' => 'admin.beranda.*'],
         ['label' => 'Pengaturan', 'ikon' => 'settings', 'route' => 'admin.pengaturan.index', 'aktif' => 'admin.pengaturan.*'],
