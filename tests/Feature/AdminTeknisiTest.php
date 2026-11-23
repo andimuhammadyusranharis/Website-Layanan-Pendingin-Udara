@@ -68,3 +68,10 @@ it('hanya mengizinkan teknisi masuk setelah disetujui', function () {
 
     expect($this->akunTeknisi->fresh()->bolehMasuk())->toBeTrue();
 });
+
+it('menampilkan daftar teknisi', function () {
+    $this->actingAs($this->admin)
+        ->get(route('admin.teknisi.index'))
+        ->assertOk()
+        ->assertSee($this->akunTeknisi->name);
+});
