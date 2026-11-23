@@ -3,20 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Produk;
+use App\Services\ProdukService;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    public function __construct(private readonly ProdukService $produkService) {}
+
     /**
-     * Tampilkan dashboard operasional admin. Datanya masih dummy sampai tabel pesanan,
-     * jadwal, pembayaran, produk, dan teknisi tersedia.
+     * Tampilkan dashboard operasional admin. Stok kritis sudah dibaca dari tabel produk,
+     * sedangkan pesanan, jadwal, pembayaran, dan teknisi masih dummy sampai tabelnya tersedia.
      */
     public function index(): View
     {
-        $stokKritis = [
-            ['id' => 7, 'nama' => 'Kapasitor 30uF 450V Daikin/Multi', 'stok' => 2, 'batas' => 10],
-            ['id' => 9, 'nama' => 'Gas Freon R32 Tabung Kecil', 'stok' => 1, 'batas' => 8],
-        ];
+        $stokKritis = $this->produkService->stokMenipis()
+            ->map(fn (Produk $produk): array => [
+                'id' => $produk->id_produk,
+                'nama' => trim($produk->merek.' '.$produk->nama),
+                'stok' => $produk->stok,
+                'batas' => ProdukService::BATAS_STOK_MENIPIS,
+            ])
+            ->all();
 
         $jadwalHariIni = [
             ['id' => 41, 'waktu' => '08:00', 'pelanggan' => 'Hj. Nurhaedah', 'layanan' => 'Cuci AC Split 1 PK', 'teknisi' => 'Pak Haris', 'status' => 'selesai'],

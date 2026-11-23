@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Produk;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -12,6 +13,8 @@ beforeEach(function () {
 
 test('dashboard admin menampilkan ringkasan, jadwal, pembayaran, stok, dan pendaftar', function () {
     Carbon::setTestNow('2026-11-04 08:00:00');
+    Produk::factory()->create(['stok' => 1]);
+    Produk::factory()->create(['stok' => 3]);
 
     $this->get('/admin')
         ->assertOk()
@@ -25,6 +28,21 @@ test('dashboard admin menampilkan ringkasan, jadwal, pembayaran, stok, dan penda
         ->assertSee('Sisa 1')
         ->assertSee('Ahmad Rizky (26 th)')
         ->assertSee('aria-current="page"', false);
+});
+
+test('stok kritis diambil dari produk aktif yang stoknya menipis dan tombol restok membuka produk itu', function () {
+    $hampirHabis = Produk::factory()->unitAc()->create(['nama' => 'Standard 1,5 PK', 'merek' => 'Gree', 'stok' => 2]);
+    $habis = Produk::factory()->habis()->create(['nama' => 'Freon R22 tabung kecil']);
+    Produk::factory()->create(['nama' => 'Remote AC universal', 'stok' => 20]);
+    Produk::factory()->nonaktif()->create(['nama' => 'Pompa air lama', 'stok' => 1]);
+
+    $this->get('/admin')
+        ->assertOk()
+        ->assertSeeInOrder(['Freon R22 tabung kecil', 'Sisa 0', 'Gree Standard 1,5 PK', 'Sisa 2'])
+        ->assertSee('href="'.route('admin.produk.edit', $habis).'"', false)
+        ->assertSee('href="'.route('admin.produk.edit', $hampirHabis).'"', false)
+        ->assertDontSee('Remote AC universal')
+        ->assertDontSee('Pompa air lama');
 });
 
 test('tombol aksi nonaktif selama route tujuannya belum dibuat', function () {

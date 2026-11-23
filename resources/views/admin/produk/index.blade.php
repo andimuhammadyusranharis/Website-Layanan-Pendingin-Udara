@@ -69,7 +69,7 @@
                                     <td class="px-4 py-3.5 whitespace-nowrap">
                                         @if ($item->stok <= 0)
                                             <x-admin.lencana warna="merah">Habis</x-admin.lencana>
-                                        @elseif ($item->stok <= 3)
+                                        @elseif ($item->stok <= \App\Services\ProdukService::BATAS_STOK_MENIPIS)
                                             <x-admin.lencana warna="kuning">Sisa {{ $item->stok }}</x-admin.lencana>
                                         @else
                                             <span class="text-[16px] tabular-nums">{{ $item->stok }}</span>

@@ -23,6 +23,11 @@ class ProdukService
     public const FOLDER_GAMBAR = 'produk';
 
     /**
+     * Stok sebanyak ini atau kurang dianggap menipis: ditandai di daftar admin dan masuk stok kritis di dashboard.
+     */
+    public const BATAS_STOK_MENIPIS = 3;
+
+    /**
      * Constructor dijalankan otomatis oleh service container Laravel saat class ini dibutuhkan.
      * Object Produk ikut disuntikkan dan dipakai sebagai pintu masuk query.
      */
@@ -65,6 +70,22 @@ class ProdukService
             ->where('aktif', true)
             ->where('slug', $slug)
             ->firstOrFail();
+    }
+
+    /**
+     * Produk aktif yang stoknya menipis atau habis, yang paling sedikit lebih dulu.
+     * Produk nonaktif dilewati karena tidak sedang dijual, jadi tidak perlu direstok.
+     *
+     * @return Collection<int, Produk>
+     */
+    public function stokMenipis(): Collection
+    {
+        return $this->produk->newQuery()
+            ->where('aktif', true)
+            ->where('stok', '<=', self::BATAS_STOK_MENIPIS)
+            ->orderBy('stok')
+            ->orderBy('nama')
+            ->get();
     }
 
     public function jumlah(): int
