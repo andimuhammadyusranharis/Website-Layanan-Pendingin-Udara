@@ -1,7 +1,9 @@
 <?php
 
 use App\Enums\KategoriLayanan;
+use App\Enums\KategoriProduk;
 use App\Models\Layanan;
+use App\Models\Produk;
 use App\Models\Ulasan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -177,6 +179,16 @@ test('ulasan menampilkan keadaan kosong bila belum ada ulasan', function () {
 });
 
 test('toko memberi tanda stok dan menonaktifkan barang yang habis', function () {
+    Produk::factory()->create(['nama' => 'Pompa pembuangan air', 'stok' => 2]);
+    Produk::factory()->create([
+        'nama' => 'Kapasitor AC 30 uF',
+        'kategori' => KategoriProduk::Kelistrikan,
+        'deskripsi' => 'Untuk AC Daikin dan Panasonic 0,5 sampai 1 PK.',
+        'stok' => 16,
+    ]);
+    Produk::factory()->unitAc()->create(['merek' => 'Daikin']);
+    Produk::factory()->unitAc()->create(['merek' => 'Panasonic']);
+
     $this->get('/toko')
         ->assertOk()
         ->assertSee('Sisa 2')
@@ -188,7 +200,7 @@ test('toko memberi tanda stok dan menonaktifkan barang yang habis', function () 
         'merekPopuler' => [],
         'unitAc' => [],
         'produk' => [
-            ['id' => 1, 'slug_kategori' => 'freon', 'kategori' => 'Freon', 'nama' => 'Freon R22', 'deskripsi' => 'Tabung kecil.', 'harga' => 150000, 'satuan' => null, 'stok' => 0, 'gambar' => null],
+            ['id' => 1, 'slug' => 'freon-r22', 'slug_kategori' => 'freon', 'kategori' => 'Freon', 'nama' => 'Freon R22', 'deskripsi' => 'Tabung kecil.', 'harga' => 150000, 'satuan' => null, 'stok' => 0, 'gambar' => null],
         ],
     ])
         ->assertSee('Stok habis')
