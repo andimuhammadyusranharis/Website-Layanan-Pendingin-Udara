@@ -119,7 +119,7 @@
                             <tr class="bg-surface-container-low">
                                 <th scope="col" class="rounded-l-xl px-4 py-3.5">Layanan</th>
                                 @foreach ($semuaJenisAc as $jenis)
-                                    <th scope="col" @class(['px-4 py-3.5 text-right whitespace-nowrap', 'rounded-r-xl' => $loop->last])>{{ $jenis['nama'] }}</th>
+                                    <th scope="col" @class(['px-4 py-3.5 text-right whitespace-nowrap', 'rounded-r-xl' => $loop->last])>{{ $jenis->nama }}</th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -133,7 +133,7 @@
                                         @endunless
                                     </th>
                                     @foreach ($semuaJenisAc as $jenis)
-                                        @php($nilai = $tarif[$item->id_layanan][$jenis['id']] ?? null)
+                                        @php($nilai = $tarif[$item->id_layanan][$jenis->id_jenis_ac] ?? null)
                                         <td class="px-4 py-3.5 text-right whitespace-nowrap tabular-nums">
                                             @if ($nilai)
                                                 <span class="font-semibold text-on-secondary-fixed-variant">{{ $rupiah($nilai) }}</span>
@@ -168,20 +168,20 @@
                             <tbody class="{{ $kelasIsiTabel }}">
                                 @foreach ($jenisAc as $jenis)
                                     <tr>
-                                        <td class="px-4 py-3.5 text-[16px] font-semibold text-on-surface">{{ $jenis['nama'] }}</td>
-                                        <td class="px-4 py-3.5 text-text-secondary">{{ $jenis['keterangan'] }}</td>
-                                        <td class="px-4 py-3.5 whitespace-nowrap">{{ collect($tarif)->filter(fn (array $baris): bool => ! empty($baris[$jenis['id']]))->count() }} layanan</td>
+                                        <td class="px-4 py-3.5 text-[16px] font-semibold text-on-surface">{{ $jenis->nama }}</td>
+                                        <td class="px-4 py-3.5 text-text-secondary">{{ $jenis->keterangan }}</td>
+                                        <td class="px-4 py-3.5 whitespace-nowrap">{{ $jenis->tarif()->whereNotNull('tarif')->count() }} layanan</td>
                                         <td class="px-4 py-3.5">
                                             <div class="flex gap-2">
-                                                <x-admin.tombol-tautan route="admin.layanan.jenis-ac.edit" :parameter="$jenis['id']" :aria-label="'Ubah jenis AC '.$jenis['nama']">Ubah</x-admin.tombol-tautan>
+                                                <x-admin.tombol-tautan route="admin.layanan.jenis-ac.edit" :parameter="$jenis->id_jenis_ac" :aria-label="'Ubah jenis AC '.$jenis->nama">Ubah</x-admin.tombol-tautan>
                                                 <x-admin.tombol-aksi
                                                     route="admin.layanan.jenis-ac.destroy"
-                                                    :parameter="$jenis['id']"
+                                                    :parameter="$jenis->id_jenis_ac"
                                                     metode="DELETE"
                                                     varian="tolak"
-                                                    :konfirmasi="'Hapus jenis AC '.$jenis['nama'].'? Tarifnya juga ikut terhapus.'"
+                                                    :konfirmasi="'Hapus jenis AC '.$jenis->nama.'? Tarifnya juga ikut terhapus.'"
                                                     judul-konfirmasi="Hapus jenis AC?"
-                                                    :aria-label="'Hapus jenis AC '.$jenis['nama']"
+                                                    :aria-label="'Hapus jenis AC '.$jenis->nama"
                                                 >Hapus</x-admin.tombol-aksi>
                                             </div>
                                         </td>

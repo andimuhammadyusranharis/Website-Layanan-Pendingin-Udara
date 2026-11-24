@@ -7,6 +7,7 @@ use Database\Factories\LayananFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Layanan extends Model
 {
@@ -64,5 +65,15 @@ class Layanan extends Model
     protected function urlGambar(): Attribute
     {
         return Attribute::get(fn (): ?string => $this->gambar ? 'storage/'.$this->gambar : null);
+    }
+
+    /**
+     * Daftar tarif per jenis AC untuk layanan ini.
+     *
+     * @return HasMany<TarifLayanan, $this>
+     */
+    public function tarif(): HasMany
+    {
+        return $this->hasMany(TarifLayanan::class, 'id_layanan', 'id_layanan');
     }
 }

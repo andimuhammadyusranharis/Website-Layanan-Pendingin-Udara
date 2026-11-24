@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\JenisAcSeeder;
 use Database\Seeders\LayananSeeder;
+use Database\Seeders\TarifLayananSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -78,7 +80,11 @@ test('pembayaran menampilkan yang perlu diverifikasi beserta tab lainnya', funct
 });
 
 test('layanan menampilkan daftar, matriks tarif, dan jenis AC', function () {
-    $this->seed(LayananSeeder::class);
+    $this->seed([
+        LayananSeeder::class,
+        JenisAcSeeder::class,
+        TarifLayananSeeder::class,
+    ]);
 
     $this->get('/admin/layanan')
         ->assertOk()
