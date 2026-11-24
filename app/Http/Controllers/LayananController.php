@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Enums\KategoriLayanan;
 use App\Models\Layanan;
+use App\Services\EstimasiService;
 use App\Services\LayananService;
+use App\Services\TarifLayananService;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class LayananController extends Controller
 {
-    public function __construct(private readonly LayananService $layananService) {}
+    public function __construct(
+        private readonly LayananService $layananService,
+        private readonly TarifLayananService $tarifLayananService,
+        private readonly EstimasiService $estimasiService,
+    ) {}
 
     /**
      * Tampilkan daftar layanan aktif dari database, sama dengan yang dikelola admin.
@@ -25,13 +31,7 @@ class LayananController extends Controller
             'layanan' => $layanan
                 ->map(fn (Layanan $item): array => $this->untukTampilan($item))
                 ->all(),
-            'simulasiEstimasi' => [
-                'judul' => 'Cuci 3 unit AC split di rumah',
-                'rincian' => [
-                    ['nama' => 'Cuci AC split, 3 unit', 'biaya' => 225000],
-                ],
-                'total' => 225000,
-            ],
+            'simulasiEstimasi' => $this->estimasiService->contoh(),
         ]);
     }
 
@@ -44,6 +44,7 @@ class LayananController extends Controller
 
         return view('pengguna.layanan-detail', [
             'layanan' => $this->untukTampilan($layanan),
+            'tarifLayanan' => $this->tarifLayananService->tabelLayanan($layanan),
             'layananTerkait' => $this->layananService->terkait($layanan)
                 ->map(fn (Layanan $item): array => $this->untukTampilan($item))
                 ->all(),
