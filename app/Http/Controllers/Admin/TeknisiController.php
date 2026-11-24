@@ -29,7 +29,9 @@ class TeknisiController extends Controller
 
     public function setujui(Teknisi $teknisi): RedirectResponse
     {
-        $this->teknisiService->setujui($teknisi);
+        if (! $this->teknisiService->setujui($teknisi)) {
+            return $this->sudahDiproses();
+        }
 
         return redirect()
             ->route('admin.teknisi.index')
@@ -38,10 +40,19 @@ class TeknisiController extends Controller
 
     public function tolak(Teknisi $teknisi): RedirectResponse
     {
-        $this->teknisiService->tolak($teknisi);
+        if (! $this->teknisiService->tolak($teknisi)) {
+            return $this->sudahDiproses();
+        }
 
         return redirect()
             ->route('admin.teknisi.index')
             ->with('status', 'Akun teknisi '.$teknisi->user->name.' ditolak.');
+    }
+
+    private function sudahDiproses(): RedirectResponse
+    {
+        return redirect()
+            ->route('admin.teknisi.index')
+            ->with('galat', 'Akun ini sudah diproses.');
     }
 }

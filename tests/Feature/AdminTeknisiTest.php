@@ -75,3 +75,46 @@ it('menampilkan daftar teknisi', function () {
         ->assertOk()
         ->assertSee($this->akunTeknisi->name);
 });
+
+it('tidak mengubah apa pun pada teknisi yang bukan berstatus menunggu', function (string $status, string $aksi) {
+    $this->teknisi->forceFill([
+        'status' => $status,
+        'disetujui_pada' => $status === Teknisi::STATUS_AKTIF ? now()->subDay() : null,
+    ])->save();
+
+    $sebelum = $this->teknisi->fresh()->getAttributes();
+
+    $this->actingAs($this->admin)
+        ->patch(route('admin.teknisi.'.$aksi, $this->teknisi->id_teknisi))
+        ->assertRedirect(route('admin.teknisi.index'))
+        ->assertSessionHas('galat', 'Akun ini sudah diproses.')
+        ->assertSessionMissing('status');
+
+    expect($this->teknisi->fresh()->getAttributes())->toBe($sebelum);
+})->with([
+    'setujui yang sudah aktif' => [Teknisi::STATUS_AKTIF, 'setujui'],
+    'tolak yang sudah aktif' => [Teknisi::STATUS_AKTIF, 'tolak'],
+    'setujui yang nonaktif' => [Teknisi::STATUS_NONAKTIF, 'setujui'],
+    'tolak yang nonaktif' => [Teknisi::STATUS_NONAKTIF, 'tolak'],
+]);
+
+it('hanya menampilkan tombol aksi untuk teknisi berstatus menunggu', function () {
+    $akunAktif = User::factory()->create(['role' => User::PERAN_TEKNISI]);
+    $aktif = Teknisi::factory()->create(['id_user' => $akunAktif->id]);
+    $aktif->forceFill(['status' => Teknisi::STATUS_AKTIF])->save();
+
+    $akunNonaktif = User::factory()->create(['role' => User::PERAN_TEKNISI]);
+    $nonaktif = Teknisi::factory()->create(['id_user' => $akunNonaktif->id]);
+    $nonaktif->forceFill(['status' => Teknisi::STATUS_NONAKTIF])->save();
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.teknisi.index'))
+        ->assertOk()
+        ->assertSee(route('admin.teknisi.setujui', $this->teknisi->id_teknisi))
+        ->assertSee(route('admin.teknisi.tolak', $this->teknisi->id_teknisi))
+        ->assertDontSee(route('admin.teknisi.setujui', $aktif->id_teknisi))
+        ->assertDontSee(route('admin.teknisi.tolak', $aktif->id_teknisi))
+        ->assertDontSee(route('admin.teknisi.setujui', $nonaktif->id_teknisi))
+        ->assertDontSee(route('admin.teknisi.tolak', $nonaktif->id_teknisi))
+        ->assertSee('Sudah diproses');
+});

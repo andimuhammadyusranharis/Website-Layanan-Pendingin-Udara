@@ -56,8 +56,8 @@
                                 <x-admin.lencana :warna="$warnaStatus[$item->status] ?? 'netral'">{{ $pilihanStatus[$item->status] ?? $item->status }}</x-admin.lencana>
                             </td>
                             <td class="px-4 py-3.5">
+                                @if ($item->status === \App\Models\Teknisi::STATUS_MENUNGGU)
                                 <div class="flex flex-wrap gap-2">
-                                    @if ($item->status !== \App\Models\Teknisi::STATUS_AKTIF)
                                     <form
                                         method="POST"
                                         action="{{ route('admin.teknisi.setujui', $item->id_teknisi) }}"
@@ -66,28 +66,24 @@
                                         data-konfirmasi-tombol="Ya, setujui">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="{{ $kelasTombol }} bg-primary-container text-white hover:bg-primary">
-                                            {{ $item->status === \App\Models\Teknisi::STATUS_NONAKTIF ? 'Aktifkan' : 'Setujui' }}
-                                        </button>
+                                        <button type="submit" class="{{ $kelasTombol }} bg-primary-container text-white hover:bg-primary">Setujui</button>
                                     </form>
-                                    @endif
 
-                                    @if ($item->status !== \App\Models\Teknisi::STATUS_NONAKTIF)
                                     <form
                                         method="POST"
                                         action="{{ route('admin.teknisi.tolak', $item->id_teknisi) }}"
                                         data-konfirmasi="Akun {{ $item->user->name }} tidak akan bisa masuk sebagai teknisi."
-                                        data-konfirmasi-judul="{{ $item->status === \App\Models\Teknisi::STATUS_MENUNGGU ? 'Tolak teknisi?' : 'Nonaktifkan teknisi?' }}"
-                                        data-konfirmasi-tombol="{{ $item->status === \App\Models\Teknisi::STATUS_MENUNGGU ? 'Ya, tolak' : 'Ya, nonaktifkan' }}"
+                                        data-konfirmasi-judul="Tolak teknisi?"
+                                        data-konfirmasi-tombol="Ya, tolak"
                                         data-konfirmasi-varian="bahaya">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="{{ $kelasTombol }} border border-status-danger text-status-danger hover:bg-lencana-merah-latar">
-                                            {{ $item->status === \App\Models\Teknisi::STATUS_MENUNGGU ? 'Tolak' : 'Nonaktifkan' }}
-                                        </button>
+                                        <button type="submit" class="{{ $kelasTombol }} border border-status-danger text-status-danger hover:bg-lencana-merah-latar">Tolak</button>
                                     </form>
-                                    @endif
                                 </div>
+                                @else
+                                <span class="text-[14px] leading-5 text-text-secondary">Sudah diproses</span>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

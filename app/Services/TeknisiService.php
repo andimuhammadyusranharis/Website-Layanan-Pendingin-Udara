@@ -48,23 +48,37 @@ class TeknisiService
         ];
     }
 
-    public function setujui(Teknisi $teknisi): Teknisi
+    /**
+     * Hanya akun berstatus menunggu yang boleh diproses. Mengembalikan false bila akun
+     * sudah aktif atau nonaktif, dan tidak ada data yang diubah.
+     */
+    public function setujui(Teknisi $teknisi): bool
     {
-        $teknisi->forceFill([
+        return $this->prosesMenunggu($teknisi, [
             'status' => Teknisi::STATUS_AKTIF,
             'disetujui_pada' => now(),
-        ])->save();
-
-        return $teknisi;
+        ]);
     }
 
-    public function tolak(Teknisi $teknisi): Teknisi
+    public function tolak(Teknisi $teknisi): bool
     {
-        $teknisi->forceFill([
+        return $this->prosesMenunggu($teknisi, [
             'status' => Teknisi::STATUS_NONAKTIF,
             'disetujui_pada' => null,
-        ])->save();
+        ]);
+    }
 
-        return $teknisi;
+    /**
+     * Syarat status ada di dalam query update, jadi pengecekan dan perubahan satu langkah.
+     * Query update tidak melewati $fillable, sehingga kolom status tetap tidak bisa diisi dari form.
+     *
+     * @param  array<string, mixed>  $nilai
+     */
+    private function prosesMenunggu(Teknisi $teknisi, array $nilai): bool
+    {
+        return $this->teknisi->newQuery()
+            ->whereKey($teknisi->getKey())
+            ->where('status', Teknisi::STATUS_MENUNGGU)
+            ->update($nilai) > 0;
     }
 }
