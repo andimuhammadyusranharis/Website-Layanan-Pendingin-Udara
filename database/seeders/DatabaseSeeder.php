@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             JenisAcSeeder::class,
             TarifLayananSeeder::class,
             UlasanSeeder::class,
+            ProdukSeeder::class,
         ]);
     }
 }

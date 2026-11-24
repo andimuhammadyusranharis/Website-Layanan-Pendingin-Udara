@@ -2,39 +2,80 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\KategoriProduk;
+use App\Models\Produk;
+use App\Services\ProdukService;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class TokoController extends Controller
 {
+    public function __construct(private readonly ProdukService $produkService) {}
+
     /**
-     * Tampilkan katalog toko. Datanya masih dummy sampai tabel produk tersedia.
-     * Foto menunggu foto asli barang di toko, sementara tampil panel "Foto menyusul".
+     * Tampilkan katalog toko dari database, sama dengan yang dikelola admin.
+     * Unit AC dan komponen dipisah karena bentuk kartunya berbeda.
      */
     public function index(): View
     {
+        $produk = $this->produkService->daftarAktif();
+        [$unitAc, $komponen] = $produk->partition(fn (Produk $item): bool => $item->kategori === KategoriProduk::UnitAc);
+
         return view('pengguna.toko', [
-            'kategoriProduk' => [
-                ['slug' => 'unit-ac', 'nama' => 'Unit AC baru'],
-                ['slug' => 'kelistrikan', 'nama' => 'Kapasitor dan kelistrikan'],
-                ['slug' => 'freon', 'nama' => 'Freon'],
-                ['slug' => 'pipa', 'nama' => 'Pipa tembaga'],
-                ['slug' => 'aksesoris', 'nama' => 'Remote dan aksesoris'],
-            ],
-            'merekPopuler' => ['Daikin', 'Panasonic', 'Sharp', 'Gree', 'LG', 'Mitsubishi Electric'],
-            'unitAc' => [
-                ['id' => 101, 'slug_kategori' => 'unit-ac', 'merek' => 'Daikin', 'model' => 'FTKQ15UVM4', 'nama' => 'Flash Inverter 0,5 PK', 'spesifikasi' => ['Daya 340 watt', 'Freon R32'], 'harga' => 4250000, 'stok' => 4, 'gambar' => 'images/toko-unit-daikin.jpg'],
-                ['id' => 102, 'slug_kategori' => 'unit-ac', 'merek' => 'Panasonic', 'model' => 'CS-YN9WKJ', 'nama' => 'Standard 1 PK', 'spesifikasi' => ['Daya 800 watt', 'Freon R32'], 'harga' => 3650000, 'stok' => 6, 'gambar' => 'images/toko-unit-panasonic.jpg'],
-                ['id' => 103, 'slug_kategori' => 'unit-ac', 'merek' => 'Sharp', 'model' => 'AH-A5SAY', 'nama' => 'Jetstream 0,5 PK', 'spesifikasi' => ['Daya 390 watt', 'Freon R32'], 'harga' => 3150000, 'stok' => 5, 'gambar' => 'images/toko-unit-sharp.jpg'],
-                ['id' => 104, 'slug_kategori' => 'unit-ac', 'merek' => 'Gree', 'model' => 'GWC-12MOO5', 'nama' => 'Standard 1,5 PK', 'spesifikasi' => ['Daya 1.050 watt', 'Freon R32'], 'harga' => 4850000, 'stok' => 3, 'gambar' => 'images/toko-unit-gree.jpg'],
-            ],
-            'produk' => [
-                ['id' => 1, 'slug_kategori' => 'kelistrikan', 'kategori' => 'Kelistrikan', 'nama' => 'Kapasitor AC 30+1,5 uF 450V', 'deskripsi' => 'Untuk AC Daikin, Panasonic, dan Changhong 0,5 sampai 1 PK. Ganti bila AC tidak mau menyala atau kompresor berdengung.', 'harga' => 85000, 'satuan' => null, 'stok' => 16, 'gambar' => 'images/toko-kapasitor.jpg'],
-                ['id' => 2, 'slug_kategori' => 'freon', 'kategori' => 'Freon', 'nama' => 'Freon R32 tabung 3 kg', 'deskripsi' => 'Untuk AC baru yang memakai freon R32. Tabung masih bersegel.', 'harga' => 195000, 'satuan' => null, 'stok' => 12, 'gambar' => 'images/toko-freon.jpg'],
-                ['id' => 3, 'slug_kategori' => 'pipa', 'kategori' => 'Pipa tembaga', 'nama' => 'Pipa tembaga 1/4 + 3/8 inci, tebal 0,61 mm', 'deskripsi' => 'Panjang 5 meter per roll. Bisa dipakai untuk AC dengan freon R32 dan R410A.', 'harga' => 240000, 'satuan' => 'roll (5 m)', 'stok' => 9, 'gambar' => 'images/toko-pipa.jpg'],
-                ['id' => 4, 'slug_kategori' => 'aksesoris', 'kategori' => 'Remote', 'nama' => 'Remote AC universal', 'deskripsi' => 'Bisa untuk Daikin, Sharp, Panasonic, Gree, LG, dan AUX. Sudah termasuk baterai.', 'harga' => 65000, 'satuan' => null, 'stok' => 20, 'gambar' => 'images/toko-remote.jpg'],
-                ['id' => 5, 'slug_kategori' => 'aksesoris', 'kategori' => 'Pembuangan air', 'nama' => 'Pompa pembuangan air AC Kingpump', 'deskripsi' => 'Untuk AC yang airnya menetes ke lantai atau plafon karena saluran pembuangan tidak bisa dibuat miring.', 'harga' => 380000, 'satuan' => null, 'stok' => 2, 'gambar' => 'images/toko-pompa.jpg'],
-                ['id' => 6, 'slug_kategori' => 'aksesoris', 'kategori' => 'Dudukan', 'nama' => 'Bracket outdoor galvanis', 'deskripsi' => 'Dudukan unit luar untuk AC sampai 2 PK. Sudah termasuk dynabolt.', 'harga' => 75000, 'satuan' => 'pasang', 'stok' => 15, 'gambar' => 'images/toko-bracket.jpg'],
-            ],
+            'kategoriProduk' => $this->kategoriTersedia($produk),
+            'merekPopuler' => $unitAc->pluck('merek')->filter()->unique()->sort()->values()->all(),
+            'unitAc' => $unitAc->map(fn (Produk $item): array => $this->untukTampilan($item))->values()->all(),
+            'produk' => $komponen->map(fn (Produk $item): array => $this->untukTampilan($item))->values()->all(),
         ]);
+    }
+
+    /**
+     * Halaman detail satu produk aktif. Slug yang salah atau produk nonaktif menghasilkan 404.
+     */
+    public function show(string $slug): View
+    {
+        return view('pengguna.toko-detail', [
+            'produk' => $this->untukTampilan($this->produkService->cariAktif($slug)),
+        ]);
+    }
+
+    /**
+     * Tombol saring hanya memuat kategori yang punya produk aktif.
+     *
+     * @param  Collection<int, Produk>  $produk
+     * @return list<array{slug: string, nama: string}>
+     */
+    private function kategoriTersedia(Collection $produk): array
+    {
+        return collect(KategoriProduk::cases())
+            ->filter(fn (KategoriProduk $kategori): bool => $produk->contains(fn (Produk $item): bool => $item->kategori === $kategori))
+            ->map(fn (KategoriProduk $kategori): array => ['slug' => $kategori->value, 'nama' => $kategori->label()])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Ubah model menjadi array dengan kunci yang dipakai view Toko. Merek dan model diubah menjadi
+     * teks kosong bila tidak ada, karena view memakainya untuk Str::slug dan teks pencarian.
+     *
+     * @return array{id: int, slug: string, slug_kategori: string, kategori: string, nama: string, deskripsi: string, merek: string, model: string, spesifikasi: list<string>, harga: int, satuan: ?string, stok: int, gambar: ?string}
+     */
+    private function untukTampilan(Produk $produk): array
+    {
+        return [
+            'id' => $produk->id_produk,
+            'slug' => $produk->slug,
+            'slug_kategori' => $produk->kategori->value,
+            'kategori' => $produk->kategori->label(),
+            'nama' => $produk->nama,
+            'deskripsi' => $produk->deskripsi,
+            'merek' => (string) $produk->merek,
+            'model' => (string) $produk->model,
+            'spesifikasi' => $produk->spesifikasi ?? [],
+            'harga' => $produk->harga,
+            'satuan' => $produk->satuan,
+            'stok' => $produk->stok,
+            'gambar' => $produk->url_gambar,
+        ];
     }
 }

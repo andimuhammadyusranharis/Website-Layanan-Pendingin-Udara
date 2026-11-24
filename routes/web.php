@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\TarifLayananController as AdminTarifLayananController;
+use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
 Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
+Route::get('/toko/{slug}', [TokoController::class, 'show'])->name('toko.show');
 Route::get('/toko', [TokoController::class, 'index'])->name('toko.index');
 Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
@@ -68,4 +70,5 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
     Route::patch('/ulasan/{ulasan}/tampilan', [AdminUlasanController::class, 'ubahTampilan'])->name('ulasan.tampilan');
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
+    Route::resource('produk', ProdukController::class)->except('show');
 });

@@ -67,7 +67,7 @@
         </section>
 
         {{-- Unit AC --}}
-        <section data-saring-bagian class="mx-auto w-full max-w-[1280px] px-4 pb-10 lg:px-8" aria-labelledby="judul-unit">
+        <section data-saring-bagian @if (count($unitAc) === 0) hidden @endif class="mx-auto w-full max-w-[1280px] px-4 pb-10 lg:px-8" aria-labelledby="judul-unit">
             <h2 id="judul-unit" class="mb-4 text-headline-md text-on-surface">Unit AC baru</h2>
 
             <div data-saring-daftar class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
@@ -87,7 +87,7 @@
 
                         <div class="flex flex-1 flex-col p-4">
                             <p class="text-label-sm text-primary">{{ $ac['merek'] }} <span class="font-semibold text-text-secondary">{{ $ac['model'] }}</span></p>
-                            <h3 class="pt-1 text-headline-sm font-bold text-on-surface">{{ $ac['nama'] }}</h3>
+                            <h3 class="pt-1 text-headline-sm font-bold text-on-surface"><a href="{{ route('toko.show', $ac['slug']) }}" class="hover:text-primary hover:underline">{{ $ac['nama'] }}</a></h3>
 
                             <p class="pt-1.5 pb-4 text-[14px] leading-5 text-text-secondary">{{ implode(', ', $ac['spesifikasi']) }}</p>
 
@@ -103,7 +103,7 @@
         </section>
 
         {{-- Suku cadang --}}
-        <section data-saring-bagian class="mx-auto w-full max-w-[1280px] px-4 pb-10 lg:px-8 lg:pb-12" aria-labelledby="judul-suku-cadang">
+        <section data-saring-bagian @if (count($produk) === 0) hidden @endif class="mx-auto w-full max-w-[1280px] px-4 pb-10 lg:px-8 lg:pb-12" aria-labelledby="judul-suku-cadang">
             <h2 id="judul-suku-cadang" class="mb-4 text-headline-md text-on-surface">Suku cadang dan komponen</h2>
 
             <div data-saring-daftar class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
@@ -123,7 +123,7 @@
 
                         <div class="flex flex-1 flex-col p-4">
                             <p class="text-label-sm text-text-secondary">{{ $barang['kategori'] }}</p>
-                            <h3 class="pt-1 text-headline-sm font-bold text-on-surface">{{ $barang['nama'] }}</h3>
+                            <h3 class="pt-1 text-headline-sm font-bold text-on-surface"><a href="{{ route('toko.show', $barang['slug']) }}" class="hover:text-primary hover:underline">{{ $barang['nama'] }}</a></h3>
                             <p class="mt-1.5 mb-3 line-clamp-2 text-[14px] leading-5 text-text-secondary">{{ $barang['deskripsi'] }}</p>
 
                             <p class="mt-auto flex items-baseline gap-1">
@@ -143,7 +143,7 @@
         </section>
 
         <div class="mx-auto w-full max-w-[1280px] px-4 lg:px-8">
-            <div data-saring-kosong hidden class="mb-10 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-outline-variant bg-white px-6 py-12 text-center lg:mb-12">
+            <div data-saring-kosong @if (count($unitAc) + count($produk) > 0) hidden @endif class="mb-10 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-outline-variant bg-white px-6 py-12 text-center lg:mb-12">
                 <span class="material-symbols-outlined text-[40px] text-text-secondary" aria-hidden="true">search_off</span>
                 <p class="text-body-semibold text-text-primary">Barang yang dicari belum ada di katalog.</p>
                 <p class="max-w-[480px] text-body-md text-text-secondary">Coba kata lain atau hapus saringan. Bisa juga tanyakan lewat WhatsApp, barang tertentu bisa kami pesankan.</p>
