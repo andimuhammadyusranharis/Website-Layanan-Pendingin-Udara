@@ -4,11 +4,14 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\JenisAcController as AdminJenisAcController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
+use App\Http\Controllers\Admin\PelangganController as AdminPelangganController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\TarifLayananController as AdminTarifLayananController;
+use App\Http\Controllers\Admin\TeknisiController as AdminTeknisiController;
 use App\Http\Controllers\Admin\UlasanController as AdminUlasanController;
+use App\Http\Controllers\Akun\ProfilController;
 use App\Http\Controllers\Autentikasi\DaftarController;
 use App\Http\Controllers\Autentikasi\GoogleController;
 use App\Http\Controllers\Autentikasi\MasukController;
@@ -71,4 +74,14 @@ Route::middleware(['auth', 'peran:admin'])->prefix('admin')->name('admin.')->gro
 
     Route::resource('layanan', AdminLayananController::class)->except('show');
     Route::resource('produk', ProdukController::class)->except('show');
+    Route::resource('pelanggan', AdminPelangganController::class)->only(['index', 'show']);
+    Route::get('/teknisi', [AdminTeknisiController::class, 'index'])->name('teknisi.index');
+    Route::patch('/teknisi/{teknisi}/setujui', [AdminTeknisiController::class, 'setujui'])->name('teknisi.setujui');
+    Route::patch('/teknisi/{teknisi}/tolak', [AdminTeknisiController::class, 'tolak'])->name('teknisi.tolak');
+});
+
+Route::middleware(['auth', 'peran:pelanggan'])->prefix('akun')->name('akun.')->group(function () {
+    Route::get('/profil', [ProfilController::class, 'edit'])->name('profil');
+    Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
+    Route::put('/profil/password', [ProfilController::class, 'updatePassword'])->name('profil.password');
 });
