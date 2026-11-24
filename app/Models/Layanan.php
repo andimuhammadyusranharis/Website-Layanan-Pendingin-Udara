@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Layanan extends Model
 {
@@ -65,6 +66,17 @@ class Layanan extends Model
     protected function urlGambar(): Attribute
     {
         return Attribute::get(fn (): ?string => $this->gambar ? 'storage/'.$this->gambar : null);
+    }
+
+    /**
+     * Mutator: spasi ganda dan spasi di tepi dirapikan sebelum nama disimpan,
+     * di mana pun Layanan dibuat (form admin, seeder, atau tinker).
+     *
+     * @return Attribute<string, string>
+     */
+    protected function nama(): Attribute
+    {
+        return Attribute::set(fn (string $nilai): string => Str::squish($nilai));
     }
 
     /**

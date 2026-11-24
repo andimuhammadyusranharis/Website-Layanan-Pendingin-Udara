@@ -165,6 +165,13 @@ test('foto yang diunggah tersimpan di disk dan path-nya masuk ke database', func
     Storage::disk('public')->assertExists($layanan->gambar);
 });
 
+test('mutator nama merapikan spasi sebelum disimpan ke database', function () {
+    $layanan = Layanan::factory()->create(['nama' => '  Cuci   AC  Split ']);
+
+    expect($layanan->nama)->toBe('Cuci AC Split')
+        ->and(Layanan::whereKey($layanan->getKey())->value('nama'))->toBe('Cuci AC Split');
+});
+
 test('store menolak foto yang bukan gambar atau terlalu besar', function (UploadedFile $berkas) {
     $this->post(route('admin.layanan.store'), dataLayananValid(['gambar' => $berkas]))
         ->assertSessionHasErrors('gambar');
