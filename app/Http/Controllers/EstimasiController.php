@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\EstimasiService;
-use App\Services\JenisAcService;
-use App\Services\LayananService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class EstimasiController extends Controller
 {
-    public function __construct(
-        private readonly LayananService $layananService,
-        private readonly JenisAcService $jenisAcService,
-        private readonly EstimasiService $estimasiService,
-    ) {}
+    public function __construct(private readonly EstimasiService $estimasiService) {}
 
     public function index(Request $request): View
     {
